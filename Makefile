@@ -77,10 +77,6 @@ lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Par
 doc: dist/doc/html/spade/spade/index.html ## Make the documentation
 .PHONY: doc
 
-open-doc: dist/doc/html/spade/spade/index.html ## Open the documentationin the default browser
-	$(OPEN) $<
-.PHONY: open-doc
-
 dist/doc/html/spade/spade/index.html: $(SOURCE_FILES)
 	stack haddock
 
