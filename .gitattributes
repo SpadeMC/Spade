@@ -1,0 +1,3 @@
+# Correct association of Alex and Happy files
+Parser/*.x  linguist-language=Haskell
+Parser/*.y  linguist-language=Haskell
