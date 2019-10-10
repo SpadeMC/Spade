@@ -1,2 +1,7 @@
 # Personal VSCode settings and other non-essentials
 .vscode/
+
+# Stack generated thing
+stack.yaml.lock
+.stack-work/
+spade
