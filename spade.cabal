@@ -13,10 +13,10 @@ name:               spade
 version:            0.0.0.1
 
 -- A short (one-line) description of the package.
-synopsis:           Compiler from spade-lang to mcfunctions
+synopsis:           Compiler from spade to mcfunctions
 
 -- A longer description of the package.
-description:        This package contains the compiler for spade-lang, which makes writing mcfunctions less... annoying...
+description:        This package contains the compiler for spade, which makes writing mcfunctions less... annoying...
 
 -- URL for the project homepage or repository.
 -- homepage:           jf908.github.io/spade
