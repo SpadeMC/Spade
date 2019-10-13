@@ -1,0 +1,204 @@
+{
+	"Integer": {
+		"lexeme": "@int",
+		"tokenValue": "((read t) :: Integer)",
+		"comment": "An integral literal",
+		"extraFields": "intVal :: Integer",
+		"showExtraFields": "c",
+		"showBody": "show c"
+	},
+	"Bool": {
+		"lexeme": "@bool",
+		"tokenValue": "(if t == \"true\" then True else False)",
+		"comment": "A boolean literal",
+		"extraFields": "isTrue :: Integer",
+		"showExtraFields": "b",
+		"showBody": "show b"
+	},
+	"Real": {
+		"lexeme": "@real",
+		"tokenValue": "((read t) :: Double)",
+		"comment": "A real/floating-point literal",
+		"extraFields": "realVal :: Double",
+		"showExtraFields": "r",
+		"showBody": "show r"
+	},
+	"String": {
+		"lexeme": "@string",
+		"tokenValue": "(init $ tail t) p)",
+		"comment": "A string literal",
+		"extraFields": "stringVal :: Double",
+		"showExtraFields": "s",
+		"showBody": "show s"
+	},
+	"IntT": {
+		"lexeme": "int"
+	},
+	"BoolT": {
+		"lexeme": "bool"
+	},
+	"RealT": {
+		"lexeme": "real"
+	},
+	"StringT": {
+		"lexeme": "string"
+	},
+	"Return": {
+		"lexeme": "return"
+	},
+	"If": {
+		"lexeme": "if"
+	},
+	"Else": {
+		"lexeme": "else"
+	},
+	"While": {
+		"lexeme": "while"
+	},
+	"Repeat": {
+		"lexeme": "repeat"
+	},
+	"Case": {
+		"lexeme": "case"
+	},
+	"For": {
+		"lexeme": "for"
+	},
+	"In": {
+		"lexeme": "in"
+	},
+	"Colon": {
+		"lexeme": ":"
+	},
+	"Dot": {
+		"lexeme": "."
+	},
+	"Ident": {
+		"lexeme": "@ident",
+		"tokenValue": "t",
+		"comment": "An identifier",
+		"extraFields": "identifierVal :: String",
+		"showExtraFields": "s",
+		"showBody": "show s"
+	},
+	"Range": {
+		"lexeme": ".."
+	},
+	"NBTMove": {
+		"lexeme": "<=="
+	},
+	"Swap": {
+		"lexeme": "><"
+	},
+	"GoesTo": {
+		"lexeme": "->"
+	},
+	"Gets": {
+		"lexeme": "="
+	},
+	"Comma": {
+		"lexeme": ","
+	},
+	"Command": {
+		"lexeme": "/"
+	},
+	"LParenth": {
+		"lexeme": "("
+	},
+	"RParenth": {
+		"lexeme": ")"
+	},
+	"LBracket": {
+		"lexeme": "["
+	},
+	"RBracket": {
+		"lexeme": "]"
+	},
+	"LBrace": {
+		"lexeme": "{"
+	},
+	"RBrace": {
+		"lexeme": "}"
+	},
+	"LAngle": {
+		"lexeme": "<"
+	},
+	"RAngle": {
+		"lexeme": ">"
+	},
+	"SeqStart": {
+		"lexeme": "|>"
+	},
+	"SeqSeries": {
+		"lexeme": "|-"
+	},
+	"SeqCont": {
+		"lexeme": "|"
+	},
+	"Constant": {
+		"lexeme": "$"
+	},
+	"Pure": {
+		"lexeme": "~"
+	},
+	"PartSeparator": {
+		"lexeme": "@partSeparator",
+		"literal": ";"
+	},
+	"BlockSeparator": {
+		"lexeme": "@blockSeparator",
+		"literal": "}"
+	},
+	"BlockStarter": {
+		"lexeme": "@blockStarter",
+		"literal": "{"
+	},
+	"Plus": {
+		"lexeme": "+"
+	},
+	"Minus": {
+		"lexeme": "-"
+	},
+	"Divide": {
+		"lexeme": "/"
+	},
+	"Modulo": {
+		"lexeme": "%"
+	},
+	"Times": {
+		"lexeme": "*"
+	},
+	"Max": {
+		"lexeme": "/"
+	},
+	"Min": {
+		"lexeme": "/"
+	},
+	"And": {
+		"lexeme": "&"
+	},
+	"Or": {
+		"lexeme": "|"
+	},
+	"Not": {
+		"lexeme": "!"
+	},
+	"LessThan": {
+		"lexeme": "<"
+	},
+	"LessThanOrEqual": {
+		"lexeme": "<="
+	},
+	"GreaterThan": {
+		"lexeme": ">"
+	},
+	"GreaterThanOrEqual": {
+		"lexeme": ">="
+	},
+	"Equal": {
+		"lexeme": "=="
+	},
+	"NotEqual": {
+		"lexeme": "!="
+	}
+}

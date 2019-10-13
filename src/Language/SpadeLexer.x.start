@@ -1,0 +1,53 @@
+{
+{-# OPTIONS_GHC -Wno-unused-imports #-}
+{-|
+Module      : SpadeLexer
+Description : Lexer for the spade language
+Copyright   : (c) Josh Findon and Edward Jones, 2019
+License     : MIT
+Maintainer  : Josh Findon and Edward Jones
+Stability   : experimental
+Portability : POSIX + Windows
+Language    : Haskell2010
+
+This module defines the machinery to lexically analyse the Spade language given in an input string.
+-}
+module Parser.EmperorLexer (Alex, AlexPosn(..), Token(..), lexWrap, alexError, runAlex) where
+
+}
+
+%wrapper "monad"
+
+$alpha = [A-Za-z]
+$num = [0-9]
+$alphaNum = [$alpha$num]
+@newline = \r\n | \r | \n
+
+@tabs = \t+
+@spaces = \ +
+@whitespace = @tabs | @spaces
+
+@ident = $alpha $alphaNum*
+@int = $num+
+@real = $num+ \. $num+
+@bool = (true) | (false)
+$stringchar = [^\n"]
+@string = \'$stringchar*\'
+
+@partSeparator = (";" @newline*) | (@newline+)
+@blockStarter = "{" @newline*
+@blockSeparator = "}" @newline*
+
+@lineComment = # .* (@newline @whitespace?)+
+@ignoredWhitespace = \\ @newline @whitespace*
+
+:-
+
+-- Things to ignore
+@spaces             ;
+@tabs+              ;
+@lineComment        ;
+@ignoredWhitespace  ;
+
+-- Whitespace
+\n                  ;

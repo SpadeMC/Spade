@@ -1,0 +1,11 @@
+-- | AlexPosn is ordered by the total number of characters read (its final field)
+instance Ord AlexPosn where
+    (AlexPn c1 _ _ ) < (AlexPn c2 _ _) = c1 < c2
+    a <= b = (a < b) || (a == b)
+
+instance ToJSON AlexPosn where
+    toJSON (AlexPn a b c) = object ["total" .= a, "line" .= b, "char" .= c]
+
+instance FromJSON AlexPosn where
+    parseJSON (Object v) = AlexPn <$> v .: "total" <*> v .: "line" <*> v .: "char"
+    parseJSON _ = fail "Expected object when parsing position datum"
