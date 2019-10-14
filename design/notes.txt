@@ -86,6 +86,9 @@ path <== NBT
 JSON (like JS)
 { asdf: 'asdf', zxcv: 'asdf', qwer: 2, list: [ 3, 5, 7 ] }
 
+NBT
+{| asdf: 32l |}
+
 BRACKETS
 () Separating expressions
 {} Blocks, JSON
