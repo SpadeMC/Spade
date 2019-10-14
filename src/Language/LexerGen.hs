@@ -1,14 +1,26 @@
-{-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-|
+Module      : LexerGen
+Description : Lexer spec generator
+Copyright   : (c) Josh Findon and Edward Jones, 2019
+License     : MIT
+Maintainer  : Josh Findon and Edward Jones
+Stability   : experimental
+Portability : POSIX + Windows
+Language    : Haskell2010
 
-import Prelude hiding (shows)
-import Data.Maybe (fromMaybe)
-import Data.Aeson
-import Data.Text (Text, append, pack)
-import Data.Map hiding (foldl)
-import qualified Data.ByteString.Lazy as B
-import GHC.Generics
-import Data.Monoid
-import Data.List (intercalate)
+This module generated Alex lexer specs from JSON and Haskell inputs.
+-}
+module Main (main) where
+
+import           Data.Aeson           (FromJSON, eitherDecode')
+import qualified Data.ByteString.Lazy as B (readFile)
+import           Data.List            (intercalate)
+import           Data.Map             (Map, toList)
+import           Data.Maybe           (fromMaybe)
+import           GHC.Generics         (Generic)
+import           Prelude              hiding (shows)
 
 type LexerData = Map String TokenData
 
@@ -24,7 +36,6 @@ data TokenData =
     } deriving (Show, Generic)
 
 instance FromJSON TokenData
-instance ToJSON TokenData
 
 startFile :: FilePath
 startFile = "SpadeLexer.x.start"
@@ -37,7 +48,7 @@ jsonFile = "SpadeLexer.x.json"
 
 main :: IO ()
 main = do
-    d <- (eitherDecode <$> (B.readFile jsonFile)) :: IO (Either String LexerData)
+    d <- (eitherDecode' <$> B.readFile jsonFile) :: IO (Either String LexerData)
     case d of
         Left err -> putStrLn err
         Right ps -> do
@@ -48,17 +59,17 @@ main = do
 
 lexerToText :: String -> String -> GeneratedLexer -> String
 lexerToText start end lexer =
-    start ++ (lexerToText' lexer) ++ end ++ "\n}"
+    start ++ lexerToText' lexer ++ end ++ "\n}"
         where
             lexerToText' :: GeneratedLexer -> String
-            lexerToText' lexer = '\n' : unlines [ unlines (captureLines lexer)
+            lexerToText' lexer' = '\n' : unlines [ unlines (captureLines lexer')
                     , "{"
-                    , "data LexemeClass = " ++ intercalate "\n\t\t| " (classes lexer)
+                    , "data LexemeClass = " ++ intercalate "\n\t\t| " (classes lexer')
                     , "\t deriving (Eq, Show)"
                     , ""
                     , "mkL :: LexemeClass -> AlexInput -> Int -> Alex Token"
                     , "mkL c (p, _, _, str) len = let t = take len str in case c of"
-                    , '\t' : intercalate "\n\t" (classToTokens lexer)
+                    , '\t' : intercalate "\n\t" (classToTokens lexer')
                     , ""
                     , "alexEOF :: Alex Token"
                     , "alexEOF = return TEoF"
@@ -69,12 +80,12 @@ lexerToText start end lexer =
                     , "lexWrap = (alexMonadScan >>=)"
                     , ""
                     , "-- | Type to represent tokens in the output stream"
-                    , "data Token = " ++ intercalate "\n\t\t| " (tokens lexer)
+                    , "data Token = " ++ intercalate "\n\t\t| " (tokens lexer')
                     , "\t| TEoF -- ^ @\\0@"
                     , "\t deriving (Eq, Ord)"
                     , ""
                     , "instance Show Token where"
-                    , '\t' : intercalate "\n\t" (shows lexer)
+                    , '\t' : intercalate "\n\t" (shows lexer')
                     , "\tshow TEoF = \"EoF\""
                     , ""
                 ]
@@ -83,27 +94,30 @@ makeLexer :: LexerData -> GeneratedLexer
 makeLexer d = foldl (<>) mempty $ makeLexer' <$> toList d
     where
         makeLexer' :: (String, TokenData) -> GeneratedLexer
-        makeLexer' (name, d) = GeneratedLexer {
-            captureLines = [ (quotify d) ++ " { mkL L" ++ name ++ " }" ]
+        makeLexer' (name, td) = GeneratedLexer {
+            captureLines = [ quotify td ++ " { mkL L" ++ name ++ " }" ]
             , classes = [ 'L' : name ]
-            , classToTokens = [ 'L' : name ++ " -> return (T" ++ name ++ ' ' : (fromMaybeEmpty (tokenValue d)) ++ " p)" ]
-            , tokens = [ 'T' : name ++ " { " ++ fromMaybeEmpty ((++ ",") <$> (extraFields d)) ++ "position :: AlexPosn } -- ^ " ++ fromMaybe ('@' : (toLiteral d) ++ "@") (comment d) ]
-            , shows = [ "show (T" ++ name ++ ' ' : (fromMaybeEmpty $ showExtraFields d) ++ " _) = " ++ fromMaybe ('"' : (toLiteral d) ++ "\"") (showBody d) ]
+            , classToTokens = [ 'L' : name ++ " -> return (T" ++ name ++ ' ' : fromMaybeEmpty (tokenValue td) ++ " p)" ]
+            , tokens = [ 'T' : name ++ " { " ++ fromMaybeEmpty ((++ ",") <$> extraFields td) ++ "position :: AlexPosn } -- ^ " ++ fromMaybe ('@' : toLiteral td ++ "@") (comment td) ]
+            , shows = [ "show (T" ++ name ++ ' ' : fromMaybeEmpty (showExtraFields td) ++ " _) = " ++ fromMaybe ('"' : toLiteral td ++ "\"") (showBody td) ]
         }
             where
-                toLiteral d = fromMaybe (lexeme d) (literal d)
-                quotify d = if head (lexeme d) == '@' then lexeme d else '"' : lexeme d ++ "\""
+                toLiteral td' = fromMaybe (lexeme td') (literal td')
+                quotify td' = if head (lexeme td') == '@' then lexeme td' else '"' : lexeme td' ++ "\""
                 fromMaybeEmpty = fromMaybe ""
 
 
 data GeneratedLexer = GeneratedLexer {
-    captureLines :: [String],
-    classes :: [String],
+    captureLines  :: [String],
+    classes       :: [String],
     classToTokens :: [String],
-    tokens :: [String],
-    shows :: [String]
+    tokens        :: [String],
+    shows         :: [String]
 }
+
+instance Semigroup GeneratedLexer where
+    (GeneratedLexer a b c d e) <> (GeneratedLexer a' b' c' d' e') = GeneratedLexer (a <> a') (b <> b') (c <> c') (d <> d') (e <> e')
 
 instance Monoid GeneratedLexer where
     mempty = GeneratedLexer [] [] [] [] []
-    mappend (GeneratedLexer a b c d e) (GeneratedLexer a' b' c' d' e') = GeneratedLexer (a <> a') (b <> b') (c <> c') (d <> d') (e <> e')
+    mappend = (<>)

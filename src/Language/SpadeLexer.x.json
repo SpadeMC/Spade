@@ -153,6 +153,10 @@
 		"lexeme": "@blockStarter",
 		"literal": "{"
 	},
+	"LineComment": {
+		"lexeme": "@lineComment",
+		"literal": "#"
+	},
 	"Plus": {
 		"lexeme": "+"
 	},
@@ -182,6 +186,12 @@
 	},
 	"Not": {
 		"lexeme": "!"
+	},
+	"Max": {
+		"lexeme": "/\\"
+	},
+	"Min": {
+		"lexeme": "\\/"
 	},
 	"LessThan": {
 		"lexeme": "<"

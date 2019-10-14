@@ -21,7 +21,7 @@ FORMATTER_FLAGS := -i
 .DEFAULT_GOAL := all
 
 # All required source files (existent or otherwise)
-SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./Args.hs ./Parser/SpadeLexer.hs ./Parser/SpadeParser.hs
+SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./Parser/SpadeLexer.hs ./Parser/SpadeParser.hs
 
 all: build ## Build everything
 .PHONY: all
@@ -55,7 +55,7 @@ build: ./spade ## Build everything, explicitly
 
 ./spade.json:;
 
-man: ./dist/doc/man/spade.1.gz; ## Make the man page
+man: ./dist/doc/man/spade.1.gz ## Make the man page
 .PHONY: man
 
 /usr/share/man/man1/spade.1.gz: ./dist/doc/man/spade.1.gz

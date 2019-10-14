@@ -38,7 +38,7 @@ $stringchar = [^\n"]
 @blockStarter = "{" @newline*
 @blockSeparator = "}" @newline*
 
-@lineComment = # .* (@newline @whitespace?)+
+@lineComment = \# .* (@newline @whitespace?)+
 @ignoredWhitespace = \\ @newline @whitespace*
 
 :-
