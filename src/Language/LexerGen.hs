@@ -1,14 +1,17 @@
-{-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE OverloadedStrings #-}
 
-import Prelude hiding (shows)
-import Data.Maybe (fromMaybe)
-import Data.Aeson
-import Data.Text (Text, append, pack)
-import Data.Map hiding (foldl)
+module Main where
+
+import           Data.Aeson
 import qualified Data.ByteString.Lazy as B
-import GHC.Generics
-import Data.Monoid
-import Data.List (intercalate)
+import           Data.List            (intercalate)
+import           Data.Map             hiding (foldl)
+import           Data.Maybe           (fromMaybe)
+import           Data.Monoid
+import           Data.Text            (Text, append, pack)
+import           GHC.Generics
+import           Prelude              hiding (shows)
 
 type LexerData = Map String TokenData
 
@@ -97,11 +100,11 @@ makeLexer d = foldl (<>) mempty $ makeLexer' <$> toList d
 
 
 data GeneratedLexer = GeneratedLexer {
-    captureLines :: [String],
-    classes :: [String],
+    captureLines  :: [String],
+    classes       :: [String],
     classToTokens :: [String],
-    tokens :: [String],
-    shows :: [String]
+    tokens        :: [String],
+    shows         :: [String]
 }
 
 instance Monoid GeneratedLexer where
