@@ -1,6 +1,17 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-|
+Module      : LexerGen
+Description : Lexer spec generator
+Copyright   : (c) Josh Findon and Edward Jones, 2019
+License     : MIT
+Maintainer  : Josh Findon and Edward Jones
+Stability   : experimental
+Portability : POSIX + Windows
+Language    : Haskell2010
 
+This module generated Alex lexer specs from JSON and Haskell inputs.
+-}
 module Main where
 
 import           Data.Aeson
