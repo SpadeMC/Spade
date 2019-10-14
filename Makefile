@@ -55,7 +55,7 @@ build: ./spade ## Build everything, explicitly
 
 ./spade.json:;
 
-man: ./dist/doc/man/spade.1.gz; ## Make the man page
+man: ./dist/doc/man/spade.1.gz ## Make the man page
 .PHONY: man
 
 /usr/share/man/man1/spade.1.gz: ./dist/doc/man/spade.1.gz
