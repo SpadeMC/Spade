@@ -187,6 +187,12 @@
 	"Not": {
 		"lexeme": "!"
 	},
+	"Max": {
+		"lexeme": "/\\"
+	},
+	"Min": {
+		"lexeme": "\\/"
+	},
 	"LessThan": {
 		"lexeme": "<"
 	},
