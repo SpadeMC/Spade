@@ -153,6 +153,10 @@
 		"lexeme": "@blockStarter",
 		"literal": "{"
 	},
+	"LineComment": {
+		"lexeme": "@lineComment",
+		"literal": "#"
+	},
 	"Plus": {
 		"lexeme": "+"
 	},
