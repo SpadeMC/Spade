@@ -8,7 +8,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{hs,x,y,cabal}]
+[*.{cabal,hs,x,y,yaml}]
 max_line_length = 120
 indent_style = space
 indent_size = 4
