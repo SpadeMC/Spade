@@ -21,7 +21,7 @@ FORMATTER_FLAGS := -i
 .DEFAULT_GOAL := all
 
 # All required source files (existent or otherwise)
-SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./Args.hs ./Parser/SpadeLexer.hs ./Parser/SpadeParser.hs
+SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./Parser/SpadeLexer.hs ./Parser/SpadeParser.hs
 
 all: build ## Build everything
 .PHONY: all
