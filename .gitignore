@@ -5,3 +5,7 @@
 stack.yaml.lock
 .stack-work/
 spade
+
+# AlexerGen outputs
+SpadeLexer.hs
+SpadeLexer.x
