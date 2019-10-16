@@ -12,7 +12,7 @@ Language    : Haskell2010
 
 This module defines the machinery to lexically analyse the Spade language given in an input string.
 -}
-module Parser.EmperorLexer (Alex, AlexPosn(..), Token(..), lexWrap, alexError, runAlex) where
+module Language.SpadeLexer (Alex, AlexPosn(..), Token(..), lexWrap, alexError, runAlex) where
 
 }
 

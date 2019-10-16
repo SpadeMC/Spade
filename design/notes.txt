@@ -4,7 +4,7 @@ Uses minecraft:reload tag
 COMMENTS
 # this is a comment
 
-STRINGS
+STRINGS (Not to clash with JSON)
 ''
 
 BLOCKS
@@ -48,7 +48,7 @@ do {} while
 
 FUNCTION
 
-asdfasdf(x: asdf) -> asd {
+asdfasdf(x: asdf): asd {
   stmt
   stmt
   /asdfhasiudfh
@@ -61,7 +61,12 @@ asdfasdf() {
 }
 
 ASSIGNMENT
+
+Only integers (because scoreboards)
 asdf = 3
+
+Swap (Scoreboards or NBT Paths)
+asdf >< zxcv
 
 MATHS (with precedence)
 asdf = 3 * 4 + 2
@@ -75,19 +80,59 @@ Series
 |-300 /asdf
 |-500 /zxcv
 
+|>100 /asdf
+| /asdf
+|-200 /axzcv
+|-300 /asdf
+|-500 /zxcv
+
 Parallel
 |> 100
 |> 200
 |> 300
 
-NBT
-path <== NBT
+SEQUENCING TODO
+
+|> Events
+
+NBT MOVE
+ NBT
+
+NBT PATH
+PATH <- {
+  asdfasf
+  zzxcv
+}
+
+RESULT
+
+PATH <- /asdfhiausdfi
+Scoreboard = /asdf
 
 JSON (like JS)
 { asdf: 'asdf', zxcv: 'asdf', qwer: 2, list: [ 3, 5, 7 ] }
 
 NBT
 {| asdf: 32l |}
+
+OPERATIONS
+
++ : Add
+- : Subtract
+* : Multiply
+/ : Division
+% : Modulo
+/\ : Max
+\/ : Min
+& : And
+| : Or
+<= : Less than or equal
+< : Less than
+== : Equal
+> : Greater than
+>= : Greater than or equal
+!= : Not equal
+
 
 BRACKETS
 () Separating expressions
