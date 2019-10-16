@@ -40,8 +40,8 @@ build: ./spade ## Build everything, explicitly
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
 .DELETE_ON_ERROR: ./src/Language/SpadeLexer.hs
 
-./src/Language/SpadeLexer.x: ./deps/alexergen/alexergen ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
-	$^ > $@
+./src/Language/SpadeLexer.x: ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
+	cd ./deps/alexergen/ && stack exec alexergen $(subst src,../../src,$^) > ../../$@
 
 ./deps/alexergen/alexergen:
 	make -C ./deps/alexergen
