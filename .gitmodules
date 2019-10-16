@@ -1,0 +1,3 @@
+[submodule "deps/alexergen"]
+	path = deps/alexergen
+	url = https://github.com/jf908/alexergen
