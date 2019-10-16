@@ -21,7 +21,7 @@ FORMATTER_FLAGS := -i
 .DEFAULT_GOAL := all
 
 # All required source files (existent or otherwise)
-SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./Parser/SpadeLexer.hs ./Parser/SpadeParser.hs
+SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./src/Language/SpadeLexer.hs # ./src/Language/SpadeParser.hs
 
 all: build ## Build everything
 .PHONY: all
@@ -36,15 +36,20 @@ build: ./spade ## Build everything, explicitly
 ./.stack-work/install/x86_64-linux-tinfo6/a4fefd2a9618441c5b464352bd9d27949d738f84f553d0be92299367e59678e1/8.6.5/bin/spade: $(SOURCE_FILES)
 	stack build
 
-./Parser/SpadeLexer.hs: ./Parser/SpadeLexer.x ./Parser/SpadeLexer.hs.patch
+./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
-.DELETE_ON_ERROR: ./Parser/SpadeLexer.hs
+.DELETE_ON_ERROR: ./src/Language/SpadeLexer.hs
 
-./Parser/SpadeParser.hs: ./Parser/SpadeParser.y ./Parser/SpadeParser.hs.patch
-	$(PARSER_GENERATOR) $(PARSER_GENERATOR_FLAGS) -i./Parser/SpadeParser.info $< -o $@
-.DELETE_ON_ERROR: ./Parser/SpadeParser.hs
+./src/Language/SpadeLexer.x: ./deps/alexergen/alexergen ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
+	$^ > $@
 
-%.x:;
+./deps/alexergen/alexergen:
+	make -C ./deps/alexergen
+
+./src/Language/SpadeParser.hs: ./src/Language/SpadeParser.y
+	$(PARSER_GENERATOR) $(PARSER_GENERATOR_FLAGS) -i./src/Language/SpadeParser.info $< -o $@
+.DELETE_ON_ERROR: ./src/Language/SpadeParser.hs
+
 %.y:;
 %.patch:;
 
@@ -66,11 +71,11 @@ man: ./dist/doc/man/spade.1.gz ## Make the man page
 	(mangen | gzip --best) < $^ > $@
 .DELETE_ON_ERROR: ./dist/doc/man/spade.1.gz
 
-format: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Parser/SpadeLexer.hs | grep -v Parser/SpadeParser.hs) ## Run the formatter on all non-generated source files
+format: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the formatter on all non-generated source files
 	$(FORMATTER) $(FORMATTER_FLAGS) $^
 .PHONY: format
 
-lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Parser/SpadeLexer.hs | grep -v Parser/SpadeParser.hs) ## Run the linter on all non-generated source files
+lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the linter on all non-generated source files
 	$(LINTER) $(LINTER_FLAGS) $^
 .PHONY: lint
 
@@ -82,7 +87,7 @@ dist/doc/html/spade/spade/index.html: $(SOURCE_FILES)
 
 clean: ## Delete all generated files
 	stack clean --verbose=0
-	$(RM) cabal.config Args.hs *_completions.sh ./spade ./Parser/Spade{Lexer,Parser,ParserData}.hs ./Parser/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
+	$(RM) cabal.config Args.hs *_completions.sh ./spade ./src/Language/Spade{Lexer,Language,ParserData}.hs ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
 .PHONY: clean
 
 # Our thanks to François Zaninotto! https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html for helping
