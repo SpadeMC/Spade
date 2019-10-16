@@ -86,8 +86,9 @@ dist/doc/html/spade/spade/index.html: $(SOURCE_FILES)
 	stack haddock
 
 clean: ## Delete all generated files
-	stack clean --verbose=0
-	$(RM) cabal.config Args.hs *_completions.sh ./spade ./src/Language/Spade{Lexer,Language,ParserData}.hs ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
+	make -C ./deps/alexergen/ clean
+	stack clean
+	$(RM) cabal.config Args.hs $(shell find . -name '*_completions.sh') ./spade ./src/Language/Spade{Lexer,Language,ParserData}.hs ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
 .PHONY: clean
 
 # Our thanks to François Zaninotto! https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html for helping
