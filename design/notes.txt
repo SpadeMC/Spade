@@ -1,0 +1,141 @@
+INITIALISATION
+Uses minecraft:reload tag
+
+COMMENTS
+# this is a comment
+
+STRINGS (Not to clash with JSON)
+''
+
+BLOCKS
+{}
+
+CONDITIONAL
+if _ {
+
+}
+else if _ {
+
+}
+else {
+
+}
+
+
+case x {
+  0: { asdf() }
+  1: {
+    zxcv()
+  }
+}
+
+LOOP
+for x in [..2] {
+
+}
+
+repeat 10 {
+
+}
+
+while expr {
+
+}
+
+LOOP TODO
+while {} else
+do {} while
+
+FUNCTION
+
+asdfasdf(x: asdf): asd {
+  stmt
+  stmt
+  /asdfhasiudfh
+  return something of type asd
+}
+
+# impure
+asdfasdf() {
+  stmt
+}
+
+ASSIGNMENT
+
+Only integers (because scoreboards)
+asdf = 3
+
+Swap (Scoreboards or NBT Paths)
+asdf >< zxcv
+
+MATHS (with precedence)
+asdf = 3 * 4 + 2
+
+SEQUENCING
+
+Series
+|>100 /asdf
+| /asdf
+|-200 /axzcv
+|-300 /asdf
+|-500 /zxcv
+
+|>100 /asdf
+| /asdf
+|-200 /axzcv
+|-300 /asdf
+|-500 /zxcv
+
+Parallel
+|> 100
+|> 200
+|> 300
+
+SEQUENCING TODO
+
+|> Events
+
+NBT MOVE
+ NBT
+
+NBT PATH
+PATH <- {
+  asdfasf
+  zzxcv
+}
+
+RESULT
+
+PATH <- /asdfhiausdfi
+Scoreboard = /asdf
+
+JSON (like JS)
+{ asdf: 'asdf', zxcv: 'asdf', qwer: 2, list: [ 3, 5, 7 ] }
+
+NBT
+{| asdf: 32l |}
+
+OPERATIONS
+
++ : Add
+- : Subtract
+* : Multiply
+/ : Division
+% : Modulo
+/\ : Max
+\/ : Min
+& : And
+| : Or
+<= : Less than or equal
+< : Less than
+== : Equal
+> : Greater than
+>= : Greater than or equal
+!= : Not equal
+
+
+BRACKETS
+() Separating expressions
+{} Blocks, JSON
+<> Unsafe casts
+[] Arrays access, JSON

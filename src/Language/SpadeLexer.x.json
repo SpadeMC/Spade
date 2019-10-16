@@ -11,7 +11,7 @@
 		"lexeme": "@bool",
 		"tokenValue": "(if t == \"true\" then True else False)",
 		"comment": "A boolean literal",
-		"extraFields": "isTrue :: Integer",
+		"extraFields": "isTrue :: Bool",
 		"showExtraFields": "b",
 		"showBody": "show b"
 	},
@@ -25,9 +25,9 @@
 	},
 	"String": {
 		"lexeme": "@string",
-		"tokenValue": "(init $ tail t) p)",
+		"tokenValue": "(init $ tail t)",
 		"comment": "A string literal",
-		"extraFields": "stringVal :: Double",
+		"extraFields": "stringVal :: String",
 		"showExtraFields": "s",
 		"showBody": "show s"
 	},
@@ -114,12 +114,6 @@
 	"RBracket": {
 		"lexeme": "]"
 	},
-	"LBrace": {
-		"lexeme": "{"
-	},
-	"RBrace": {
-		"lexeme": "}"
-	},
 	"LAngle": {
 		"lexeme": "<"
 	},
@@ -186,6 +180,12 @@
 	},
 	"Not": {
 		"lexeme": "!"
+	},
+	"Max": {
+		"lexeme": "/\\"
+	},
+	"Min": {
+		"lexeme": "\\/"
 	},
 	"LessThan": {
 		"lexeme": "<"

@@ -1,10 +1,33 @@
 # Personal VSCode settings and other non-essentials
 .vscode/
 
-# Stack generated thing
-stack.yaml.lock
-.stack-work/
+# Executable
 spade
+
+# Haskell
+stack.yaml.lock
+dist
+dist-*
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+cabal.project.local
+cabal.project.local~
+.HTF/
+.ghc.environment.*
 
 # AlexerGen outputs
 SpadeLexer.hs
