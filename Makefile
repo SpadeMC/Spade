@@ -40,8 +40,8 @@ build: ./spade ## Build everything, explicitly
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
 .DELETE_ON_ERROR: ./src/Language/SpadeLexer.hs
 
-./src/Language/SpadeLexer.x: ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
-	cd ./deps/alexergen/ && stack exec alexergen $(subst src,../../src,$^) > ../../$@
+./src/Language/SpadeLexer.x: ./deps/alexergen/alexergen ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
+	cd ./deps/alexergen/ && stack exec --cwd ../../ -- alexergen $(subst deps/alexergen/alexergen,,$^) > ../../$@
 
 ./deps/alexergen/alexergen:
 	make -C ./deps/alexergen
@@ -88,7 +88,7 @@ dist/doc/html/spade/spade/index.html: $(SOURCE_FILES)
 clean: ## Delete all generated files
 	make -C ./deps/alexergen/ clean
 	stack clean
-	$(RM) cabal.config Args.hs $(shell find . -name '*_completions.sh') ./spade ./src/Language/Spade{Lexer,Language,ParserData}.hs ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
+	$(RM) cabal.config Args.hs $(shell find . -name '*_completions.sh') ./spade ./src/Language/Spade{Lexer,Language,ParserData}.hs ./src/Language/SpadeLexer.x ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
 .PHONY: clean
 
 # Our thanks to François Zaninotto! https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html for helping
