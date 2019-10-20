@@ -64,13 +64,21 @@ executable spade
     hs-source-dirs: ./src/
 
     -- Modules included in this executable, other than Main.
-    other-modules:
+    other-modules: Language.AST
+                 , Language.Position
+                 , Language.SpadeLexer
+                 , Language.SpadeParser
+                 , Language.SpadeParserWrapper
+                 , Results.Errors
+                 , Results.Results
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:  base >= 4.12 && < 4.13
+    build-depends: array >=0.5 && <0.6
+                 , base >= 4.12 && < 4.13
+                 , containers >=0.6 && <0.7
 
     -- Base language which the package is written in.
     default-language:     Haskell2010
