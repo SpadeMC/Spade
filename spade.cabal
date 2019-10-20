@@ -55,7 +55,7 @@ source-repository head
 
 executable spade
     -- .hs or .lhs file containing the Main module.
-    main-is:        Main.hs
+    main-is:        ./src/Main.hs
 
     -- Compiler flags
     ghc-options:    -Wall -Wextra -Werror -O2
