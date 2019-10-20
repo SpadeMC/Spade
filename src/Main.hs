@@ -11,5 +11,14 @@ Language    : Haskell2010
 This module provides a CLI for dig.
 -}
 
+import           Modules.Results (Result (..))
+
 main :: IO ()
 main = putStrLn "Hello, world!"
+
+compile :: String -> IO (Result [(String,String)])
+compile = do
+    a <- parse "-"
+    checkTypes a
+    optimise
+    generate
