@@ -21,7 +21,7 @@ FORMATTER_FLAGS := -i
 .DEFAULT_GOAL := all
 
 # All required source files (existent or otherwise)
-SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./src/Language/SpadeLexer.hs # ./src/Language/SpadeParser.hs
+SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./src/Language/SpadeLexer.hs ./src/Language/SpadeParser.hs
 
 all: build ## Build everything
 .PHONY: all
@@ -36,8 +36,9 @@ build: ./spade ## Build everything, explicitly
 ./.stack-work/install/x86_64-linux-tinfo6/a4fefd2a9618441c5b464352bd9d27949d738f84f553d0be92299367e59678e1/8.6.5/bin/spade: $(SOURCE_FILES)
 	stack build
 
-./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x
+./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x ./src/Langauge/SpadeLexer.hs.patch
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
+	patch -F 1 $@ ./src/Language/SpadeLexer.hs.patch
 .DELETE_ON_ERROR: ./src/Language/SpadeLexer.hs
 
 ./src/Language/SpadeLexer.x: ./deps/alexergen/alexergen ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end

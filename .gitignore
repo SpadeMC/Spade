@@ -32,3 +32,7 @@ cabal.project.local~
 # AlexerGen outputs
 SpadeLexer.hs
 SpadeLexer.x
+
+# Happy outputs
+SpadeParser.hs
+SpadeParser.info
