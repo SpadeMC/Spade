@@ -39,7 +39,7 @@ main = do
             printErrors es
             exitFailure
 
-compile :: String -> Result [(String,String)]
+compile :: String -> Result [(FilePath,String)]
 compile = do
     checkTypes a
     optimise
