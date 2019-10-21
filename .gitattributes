@@ -1,5 +1,5 @@
 # Correct association of Alex and Happy files
-Parser/*.x  linguist-language=Haskell
-Parser/*.x.start  linguist-language=Haskell
-Parser/*.x.end  linguist-language=Haskell
-Parser/*.y  linguist-language=Haskell
+src/Language/*.x  linguist-language=Haskell
+src/Language/*.x.start  linguist-language=Haskell
+src/Language/*.x.end  linguist-language=Haskell
+src/Language/*.y  linguist-language=Haskell
