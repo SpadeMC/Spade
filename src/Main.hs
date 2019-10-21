@@ -15,6 +15,8 @@ import           Generator.Generator         (generate)
 import           Language.SpadeParserWrapper (parse)
 import           Modules.Results             (Result (..))
 import           Optimiser.Optimiser         (optimise)
+import           System.Exit                 (exitFailure)
+import           System.IO                   (hPutStrLn, stderr)
 import           TypeChecker.TypeChecker     (typeCheck)
 
 main :: IO ()
@@ -33,7 +35,9 @@ main = do
                 print rs
             else
                 writeFile "asdf.mcfunction"
-        Fail es -> printErrors es
+        Fail es -> do
+            printErrors es
+            exitFailure
 
 compile :: String -> Result [(String,String)]
 compile = do
@@ -44,5 +48,5 @@ compile = do
 printErrors :: Errors -> IO ()
 printErrors [] = return ()
 printErrors (e:es) = do
-    print e
+    hPutStrLn stderr $ show e
     printErrors es
