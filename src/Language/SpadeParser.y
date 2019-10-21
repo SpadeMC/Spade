@@ -71,6 +71,7 @@ import Language.Position (GetPos, getPos)
     "->"            { TGoesTo               p }
     "=="            { TEqual                p }
     "!="            { TNotEqual             p }
+    "<"             { TLAngle               p }
     "<"             { TLessThan             p }
     "<="            { TLessThanOrEqual      p }
     ">"             { TGreaterThan          p }
@@ -87,72 +88,6 @@ import Language.Position (GetPos, getPos)
     "-"             { TMinus                p }
     "*"             { TTimes                p }
     "%"             { TModulo               p }
-    "<"             { TLAngle               p }
-    -- DOCASSIGNMENTLINE   { TDocAssignmentLine    p }
-    -- DOCLINE             { TDocLine              p }
-    -- INT                 { TInteger              intVal p }
-    -- BOOL                { TBool                 isTrue p }
-    -- REAL                { TReal                 realVal p }
-    -- CHAR                { TChar                 charVal p }
-    -- STRING              { TString               stringVal p }
-    -- "if"                { TIf                   p }
-    -- "else"              { TElse                 p }
-    -- "while"             { TWhile                p }
-    -- "repeat"            { TRepeat               p }
-    -- "with"              { TWith                 p }
-    -- "switch"            { TSwitch               p }
-    -- "for"               { TFor                  p }
-    -- "import"            { TImport               p }
-    -- "module"            { TModule               p }
-    -- IDENT               { TIdent                identifierVal p }
-    -- "<-"                { TQueue                p }
-    -- "->"                { TGoesTo               p }
-    -- "="                 { TGets                 p }
-    -- "("                 { TLParenth             p }
-    -- ")"                 { TRParenth             p }
-    -- "["                 { TLBracket             p }
-    -- "]"                 { TRBracket             p }
-    -- "{"                 { TLBrace               p }
-    -- "}"                 { TRBrace               p }
-    -- "+"                 { TPlus                 p }
-    -- "-"                 { TMinus                p }
-    -- "/"                 { TDivide               p }
-    -- "%"                 { TModulo               p }
-    -- "*"                 { TTimes                p }
-    -- "<<"                { TShiftLeft            p }
-    -- ">>"                { TShiftRight           p }
-    -- ">>>"               { TShiftRightSameSign   p }
-    -- "&"                 { TAndScrict            p }
-    -- "&&"                { TAndLazy              p }
-    -- "|"                 { TOrStrict             p }
-    -- "||"                { TOrLazy               p }
-    -- "!"                 { TNot                  p }
-    -- "^"                 { TXor                  p }
-    -- "<"                 { TLessThan             p }
-    -- "<="                { TLessThanOrEqual      p }
-    -- ">"                 { TGreaterThan          p }
-    -- ">="                { TGreaterThanOrEqual   p }
-    -- "=>"                { TImplies              p }
-    -- "=="                { TEqual                p }
-    -- "!="                { TNotEqual             p }
-    -- "@"                 { TImpure               p }
-    -- ","                 { TComma                p }
-    -- ":"                 { TColon                p }
-    -- ";"                 { TPartSeparator        p }
-    -- "int"               { TIntT                 p }
-    -- "bool"              { TBoolT                p }
-    -- "real"              { TRealT                p }
-    -- "char"              { TCharT                p }
-    -- "string"            { TStringT              p }
-    -- "()"                { TUnit                 p }
-    -- "Any"               { TAnyT                 p }
-    -- "<:"                { TIsSubType            p }
-    -- "<~"                { TIsImplementeBy       p }
-    -- "|>"                { TIsType               p }
-    -- "class"             { TClass                p }
-    -- "component"         { TComponent            p }
-    -- "#"                 { TBlockSeparator       p }
-    -- "return"            { TReturn               p }
 
 %left CALL
 %right "->"
