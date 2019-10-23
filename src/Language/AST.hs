@@ -31,7 +31,7 @@ data ModuleItem = FunctionItem FunctionDef AlexPosn
 
 -- | Describes the definition of a function
 data FunctionDef =
-    FunctionDef FunctionSignature [SequenceOrBody] AlexPosn
+    FunctionDef FunctionSignature [FunctionBodyBlock] AlexPosn
     deriving (Show)
 
 -- | Describes the definition of the type of a function
@@ -40,9 +40,9 @@ data FunctionSignature =
     deriving (Show)
 
 -- | Describes the definition of blocks or sequences
-data SequenceOrBody
+data FunctionBodyBlock
     = SequenceBody [Sequence] AlexPosn
-    | BodyBody BodyBlock SequenceOrBody AlexPosn
+    | BodyBody BodyBlock AlexPosn
     deriving (Show)
 
 -- | Describes the definition of a sequence of events
@@ -112,8 +112,9 @@ data Expr
     | And Expr Expr SpadeType AlexPosn
     | Or Expr Expr SpadeType AlexPosn
     | List [Expr] SpadeType AlexPosn
-    | Map (Map String Expr) SpadeType AlexPosn
+    | Map [(Expr, Expr)] SpadeType AlexPosn
     | Range RangeDef
+    | ListCont Expr Expr SpadeType AlexPosn
     deriving (Show)
 
 data RangeDef
@@ -159,6 +160,7 @@ data NBTMove =
 
 data SpadeType
     = Unknown AlexPosn
+    | Void AlexPosn
     | IntegerT AlexPosn
     | DoubleT AlexPosn
     | StringT AlexPosn

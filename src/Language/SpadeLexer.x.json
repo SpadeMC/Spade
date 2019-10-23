@@ -5,7 +5,8 @@
 		"comment": "An integral literal",
 		"extraFields": "intVal :: Integer",
 		"showExtraFields": "c",
-		"showBody": "show c"
+		"showBody": "show c",
+		"precendence": 2
 	},
 	"Bool": {
 		"lexeme": "@bool",
@@ -31,17 +32,32 @@
 		"showExtraFields": "s",
 		"showBody": "show s"
 	},
-	"IntT": {
-		"lexeme": "int"
-	},
 	"BoolT": {
 		"lexeme": "bool"
 	},
+	"ByteT": {
+		"lexeme": "byte"
+	},
+	"ShortT": {
+		"lexeme": "short"
+	},
+	"IntT": {
+		"lexeme": "int"
+	},
+	"LongT": {
+		"lexeme": "long"
+	},
+	"FloatT": {
+		"lexeme": "float"
+	},
 	"RealT": {
-		"lexeme": "real"
+		"lexeme": "double"
 	},
 	"StringT": {
 		"lexeme": "string"
+	},
+	"RangeT": {
+		"lexeme": "range"
 	},
 	"Return": {
 		"lexeme": "return"
@@ -79,7 +95,10 @@
 		"comment": "An identifier",
 		"extraFields": "identifierVal :: String",
 		"showExtraFields": "s",
-		"showBody": "show s"
+		"showBody": "s"
+	},
+	"ListCont": {
+		"lexeme": "..."
 	},
 	"Range": {
 		"lexeme": ".."
@@ -123,17 +142,19 @@
 	"SeqStart": {
 		"lexeme": "|>"
 	},
-	"SeqSeries": {
-		"lexeme": "|-"
-	},
-	"SeqCont": {
-		"lexeme": "|"
-	},
 	"Constant": {
 		"lexeme": "$"
 	},
 	"Pure": {
 		"lexeme": "~"
+	},
+	"CommandPart": {
+		"lexeme": "@commandPart",
+		"tokenValue": "p",
+		"comment": "A part of a command",
+		"extraFields": "commandPartVal :: String",
+		"showExtraFields": "c",
+		"showBody": "c"
 	},
 	"PartSeparator": {
 		"lexeme": "@partSeparator",
@@ -149,7 +170,7 @@
 	},
 	"LineComment": {
 		"lexeme": "@lineComment",
-		"literal": "#"
+		"literal": "--"
 	},
 	"Plus": {
 		"lexeme": "+"
@@ -165,12 +186,6 @@
 	},
 	"Times": {
 		"lexeme": "*"
-	},
-	"Max": {
-		"lexeme": "/"
-	},
-	"Min": {
-		"lexeme": "/"
 	},
 	"And": {
 		"lexeme": "&"

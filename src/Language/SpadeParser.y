@@ -33,6 +33,7 @@ import Language.Position (GetPos, getPos)
 %token
     BOOL            { TBool                 isTrue p }
     IDENT           { TIdent                identifierVal p }
+    COMMAND_PART    { TCommandPart          commandPartVal p }
     INT             { TInteger              intVal p }
     REAL            { TReal                 realVal p }
     STRING          { TString               stringVal p }
@@ -48,13 +49,16 @@ import Language.Position (GetPos, getPos)
     ".."            { TRange                p }
     ","             { TComma                p }
     "."             { TDot                  p }
-    "|"             { TSeqCont              p }
-    "|-"            { TSeqSeries            p }
     "|>"            { TSeqStart             p }
     "bool"          { TBoolT                p }
-    "real"          { TRealT                p }
+    "byte"          { TByteT                p }
+    "short"         { TShortT               p }
     "int"           { TIntT                 p }
+    "long"          { TLongT                p }
+    "float"         { TFloatT               p }
+    "real"          { TRealT                p }
     "string"        { TStringT              p }
+    "range"         { TRangeT               p }
     "case"          { TCase                 p }
     "else"          { TElse                 p }
     "if"            { TIf                   p }
@@ -107,17 +111,72 @@ ast :: {AST}
 ast : moduleItems   { AST $1 }
 
 moduleItems :: {[ModuleItem]}
-moduleItems : moduleItems                   { [$1] }
+moduleItems : moduleItem                   { [$1] }
             | moduleItem "\n" moduleItems  { $1 : $3 }
 
 moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
 
 functionDef :: {FunctionDef}
-functionDef : functionSignature "{" bodyStructures "}"
+functionDef : functionSignature "{" functionBody "}"
 
 functionSignature :: {FunctionSignature}
-functionSignature : -- TODO: This... and everything else lol
+functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
+                  | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void (getPos $1)) (getPos $1) }
+
+functionBody :: {FunctionBody}
+functionBody : "|>" sequenceBodies { SequenceBody $2 (getPos $1) }
+             | bodyBlocks          { BodyBody $1 (getPos $1) }
+
+sequenceBodies :: {[Sequence]}
+sequenceBodies : sequenceBody                { [$1] }
+               | sequenceBody sequenceBodies { $1 : $2 }
+
+sequenceBody :: {Sequence}
+sequenceBody : expr "{" bodyBlocks "}" { Sequence $1 $3 (getPos $1) }
+
+condBlocks :: {[CondBlock]}
+condBlocks : condBlock                        { [$1] }
+           | condBlock "else" "if" condBlocks { $1 : $4 }
+
+condBlock :: {CondBlock}
+condBlock : expr bodyBlocks { ($1, $2) }
+
+switchCases :: {[SwitchCase]}
+switchCases : switchCase                  { [$1] }
+            | switchCase "\n" switchCases { $1 : $3 }
+
+switchCase :: {SwitchCase}
+switchCase : expr ":" "{" bodyBlocks "}" { SwitchCase $1 $4 (getPos $1) }
+
+bodyBlocks :: {[BodyBlock]}
+bodyBlocks : {-empty-}                 { [] }
+           | bodyBlock "\n" bodyBlocks { $1 : $3 }
+
+bodyBlock :: {BodyBlock}
+bodyBlock : bodyLine                                      { Line $1 (getPos $1) }
+          | "if" condBlocks                           { If $1 (Just $5) (getPos $1) }
+          | "if" condBlocks "else" "{" bodyBlocks "}" { If $1 (Just $5) (getPos $1) }
+          | "while" expr "{" bodyBlocks "}"           { While $2 $4 (getPos $1) }
+          | "for" IDENT "in" expr "{" bodyBlocks "}"  { For (Ident (identifierVal $2) (getPos $2)) $4 $6 (getPos $1) }
+          | "repeat" expr "{" bodyBlocks "}"          { Repeat $2 $4 (getPos $1) }
+          | "switch" expr "{" switchCases "}"         { Switch $2 $4 (getPos $1) }
+
+bodyLine :: {BodyLine}
+bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
+         | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
+         | "/" command            { CommandC $2 }
+         | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 Unknown (getPos $1)) }
+         | "return"               { Return Nothing (getPos $1) }
+         | "return" expr          { Return (Just $2) (getPos $1) }
+
+command :: {Command}
+command : commandPart         { [$1] }
+        | commandPart command { $1 : $2 }
+
+commandPart :: {Either String Expr}
+commandPart : "$" "{" expr "}" { Right $3 }
+            | COMMAND_PART     { Left (commandPartVal $1) }
 
 exprList :: {[Expr]}
 exprList : {- empty -}          { [] }
@@ -126,6 +185,69 @@ exprList : {- empty -}          { [] }
 exprListNonZero :: {[Expr]}
 exprListNonZero : expr                      { [$1] }
                 | expr "," exprListNonZero  { $1 : $3 }
+
+exprMap :: {[(Expr, Expr)]}
+exprMap : exprMapPart             { [$1] }
+        | exprMapPart "," exprMap { $1 : $3 }
+
+exprMapPart :: {(Expr, Expr)}
+exprMapPart : expr ":" expr { ($1, $3) }
+
+expr :: {Expr}
+expr : value
+     | "-" expr
+     | expr "+" expr
+     | expr "-" expr
+     | expr "*" expr
+     | expr "/" expr
+     | expr "%" expr
+     | expr "<" expr
+     | expr "<=" expr
+     | expr ">" expr
+     | expr ">=" expr
+     | expr "==" expr
+     | expr "!=" expr
+     | expr "/\\" expr
+     | expr "\\/" expr
+     | "!" expr
+     | expr "&" expr
+     | expr "|" expr
+     | "[" exprList "]"
+     | "{" exprMap "}"
+     | "[" expr ".." expr "]"
+     | "[" ".." expr "]"
+     | "[" expr ".." "]"
+     | "[" expr "..." expr "]"
+     | "<" spadeType ">" expr
+     | "(" expr ")"
+
+value :: {Value}
+value = INT
+      | REAL
+      | STRING
+      | IDENT
+      | BOOL
+      | IDENT "(" exprList ")"
+
+spadeType :: {SpadeType}
+spadeType : "bool"
+          | "byte"
+          | "short"
+          | "int"
+          | "long"
+          | "float"
+          | "real"
+          | "string"
+          | "range"
+          | "[" spadeType "]"
+          | "{" typedIdents "}" { Map }
+
+typedIdents :: {[(Ident, SpadeType)]}
+typedIdents : typedIdent                 { [$1] }
+            | typedIdent "," typedIdents { $1 : $3 }
+
+typedIdent :: {(Ident, SpadeType)}
+typedIdent : IDENT ":" spadeType { (identifierVal $1, $3) }
 
 maybe(p) : {- empty -} { Nothing }
          | p           { Just $1 }

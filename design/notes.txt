@@ -27,10 +27,13 @@ case x {
   1: {
     zxcv()
   }
+  default: {
+
+  }
 }
 
 LOOP
-for x in [..2] {
+for x in [0...2] {
 
 }
 
@@ -74,26 +77,25 @@ asdf = 3 * 4 + 2
 SEQUENCING
 
 Series
-|>100 /asdf
-| /asdf
-|-200 /axzcv
-|-300 /asdf
-|-500 /zxcv
+|>100 { /asdf }
+200 { /asdfzxcv }
+300 { /asdf }
+500 { /azxcv }
 
-|>100 /asdf
-| /asdf
-|-200 /axzcv
-|-300 /asdf
-|-500 /zxcv
+|> 500 {
+
+} 100 {
+
+}
+
 
 Parallel
 |> 100
 |> 200
 |> 300
 
-SEQUENCING TODO
-
-|> Events
+Global Events
+||>BlockBreak zxcv(x: int, y: int, z: int)
 
 NBT MOVE
  NBT
@@ -139,3 +141,7 @@ BRACKETS
 {} Blocks, JSON
 <> Unsafe casts
 [] Arrays access, JSON
+
+SYNTACTIC SUGAR IDEAS TODO
+
+d | s | t - days, seconds, time multipliers

@@ -33,12 +33,13 @@ $alphaNum = [$alpha$num]
 @bool = (true) | (false)
 $stringchar = [^\n"]
 @string = \'$stringchar*\'
+@commandPart = [^\s\n]+
 
 @partSeparator = (";" @newline*) | (@newline+)
 @blockStarter = "{" @newline*
 @blockSeparator = "}" @newline*
 
-@lineComment = \# .* (@newline @whitespace?)+
+@lineComment = \-\- .* (@newline @whitespace?)+
 @ignoredWhitespace = \\ @newline @whitespace*
 
 :-
