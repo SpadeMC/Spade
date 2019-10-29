@@ -16,7 +16,6 @@ spade language.
 module Language.AST where
 
 import           Data.Int
-import           Data.Map            (Map)
 import           Language.SpadeLexer (AlexPosn (..))
 -- import Types.Results (SpadeType(..), Purity(..))
 
@@ -50,7 +49,7 @@ data Sequence
     = Sequence Event [BodyBlock] AlexPosn
     deriving (Show)
 
-data Event = Delay Integer AlexPosn
+data Event = Event Expr AlexPosn
     deriving (Show)
 
 -- | Represents a single construction in the body of a function. This may be a
@@ -93,7 +92,7 @@ data Command =
 
 -- | Data-structure to represent an expression
 data Expr
-    = Value Value SpadeType SpadeType AlexPosn
+    = Value Value SpadeType AlexPosn
     | Neg Expr SpadeType AlexPosn
     | Add Expr Expr SpadeType AlexPosn
     | Subtract Expr Expr SpadeType AlexPosn
@@ -127,16 +126,16 @@ data RangeDef
 
 -- | Data-structure to represent a single value
 data Value
-    = Integer Integer SpadeType AlexPosn
-    | Double Double SpadeType AlexPosn
-    | String String SpadeType AlexPosn
+    = IntegerV Integer SpadeType AlexPosn
+    | DoubleV Double SpadeType AlexPosn
+    | StringV String SpadeType AlexPosn
     | IdentV Ident SpadeType AlexPosn
-    | Bool Bool SpadeType AlexPosn
+    | BoolV Bool SpadeType AlexPosn
     | CallV Call SpadeType AlexPosn
-    | Byte Int8 SpadeType AlexPosn
-    | Short Int16 SpadeType AlexPosn
-    | Long Int64 SpadeType AlexPosn
-    | Float Float SpadeType AlexPosn
+    | ByteV Int8 SpadeType AlexPosn
+    | ShortV Int16 SpadeType AlexPosn
+    | LongV Int64 SpadeType AlexPosn
+    | FloatV Float SpadeType AlexPosn
     deriving (Show)
 
 -- | Represents the use of a function

@@ -104,13 +104,10 @@
 		"lexeme": ".."
 	},
 	"NBTMove": {
-		"lexeme": "<=="
+		"lexeme": "<-"
 	},
 	"Swap": {
 		"lexeme": "><"
-	},
-	"GoesTo": {
-		"lexeme": "->"
 	},
 	"Gets": {
 		"lexeme": "="
@@ -118,8 +115,12 @@
 	"Comma": {
 		"lexeme": ","
 	},
-	"Command": {
+	"ForwardSlash": {
 		"lexeme": "/"
+	},
+	"Command": {
+		"lexeme": "//",
+		"beginState": "command"
 	},
 	"LParenth": {
 		"lexeme": "("
@@ -150,15 +151,22 @@
 	},
 	"CommandPart": {
 		"lexeme": "@commandPart",
-		"tokenValue": "p",
+		"tokenValue": "t",
 		"comment": "A part of a command",
 		"extraFields": "commandPartVal :: String",
 		"showExtraFields": "c",
-		"showBody": "c"
+		"showBody": "c",
+		"state": "command"
 	},
 	"PartSeparator": {
 		"lexeme": "@partSeparator",
 		"literal": ";"
+	},
+	"CommandTerminator": {
+		"lexeme": "@newline",
+		"literal": "\\\\n",
+		"state": "command",
+		"beginState": "0"
 	},
 	"BlockSeparator": {
 		"lexeme": "@blockSeparator",
@@ -177,9 +185,6 @@
 	},
 	"Minus": {
 		"lexeme": "-"
-	},
-	"Divide": {
-		"lexeme": "/"
 	},
 	"Modulo": {
 		"lexeme": "%"
@@ -202,14 +207,8 @@
 	"Min": {
 		"lexeme": "\\\\/"
 	},
-	"LessThan": {
-		"lexeme": "<"
-	},
 	"LessThanOrEqual": {
 		"lexeme": "<="
-	},
-	"GreaterThan": {
-		"lexeme": ">"
 	},
 	"GreaterThanOrEqual": {
 		"lexeme": ">="

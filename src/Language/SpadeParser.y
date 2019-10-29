@@ -28,7 +28,7 @@ import Language.Position (GetPos, getPos)
 %tokentype { Token }
 
 -- Enforce perfection
-%expect 0
+-- %expect 0
 
 %token
     BOOL            { TBool                 isTrue p }
@@ -47,6 +47,7 @@ import Language.Position (GetPos, getPos)
     "["             { TLBracket             p }
     "]"             { TRBracket             p }
     ".."            { TRange                p }
+    "..."           { TListCont             p }
     ","             { TComma                p }
     "."             { TDot                  p }
     "|>"            { TSeqStart             p }
@@ -68,26 +69,22 @@ import Language.Position (GetPos, getPos)
     "while"         { TWhile                p }
     "return"        { TReturn               p }
     "="             { TGets                 p }
-    "<=="           { TNBTMove              p }
+    "<-"            { TNBTMove              p }
     "><"            { TSwap                 p }
     "$"             { TConstant             p }
     "~"             { TPure                 p }
-    "->"            { TGoesTo               p }
     "=="            { TEqual                p }
     "!="            { TNotEqual             p }
     "<"             { TLAngle               p }
-    "<"             { TLessThan             p }
     "<="            { TLessThanOrEqual      p }
-    ">"             { TGreaterThan          p }
     ">="            { TGreaterThanOrEqual   p }
     ">"             { TRAngle               p }
-    "/"             { TMax                  p }
-    "/"             { TMin                  p }
+    "/\\"           { TMax                  p }
+    "\\/"           { TMin                  p }
     "&"             { TAnd                  p }
     "!"             { TNot                  p }
     "|"             { TOr                   p }
-    "/"             { TCommand              p }
-    "/"             { TDivide               p }
+    "/"             { TForwardSlash         p }
     "+"             { TPlus                 p }
     "-"             { TMinus                p }
     "*"             { TTimes                p }
@@ -118,22 +115,29 @@ moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
 
 functionDef :: {FunctionDef}
-functionDef : functionSignature "{" functionBody "}"
+functionDef : functionSignature "{" functionBodyBlocks "}" { FunctionDef $1 $3 (getPos $1) }
 
 functionSignature :: {FunctionSignature}
 functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
                   | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void (getPos $1)) (getPos $1) }
 
-functionBody :: {FunctionBody}
+functionBodyBlocks :: {[FunctionBodyBlock]}
+functionBody : functionBody                         { [$1] }
+             | functionBody "\n" functionBodyBlocks { $1 : $3 }
+
+functionBody :: {FunctionBodyBlock}
 functionBody : "|>" sequenceBodies { SequenceBody $2 (getPos $1) }
-             | bodyBlocks          { BodyBody $1 (getPos $1) }
+             | bodyBlock           { BodyBody $1 (getPos $1) }
 
 sequenceBodies :: {[Sequence]}
 sequenceBodies : sequenceBody                { [$1] }
                | sequenceBody sequenceBodies { $1 : $2 }
 
 sequenceBody :: {Sequence}
-sequenceBody : expr "{" bodyBlocks "}" { Sequence $1 $3 (getPos $1) }
+sequenceBody : event "{" bodyBlocks "}" { Sequence $1 $3 (getPos $1) }
+
+event :: {Event}
+event : expr { Event $1 (getPos $1) }
 
 condBlocks :: {[CondBlock]}
 condBlocks : condBlock                        { [$1] }
@@ -155,22 +159,22 @@ bodyBlocks : {-empty-}                 { [] }
 
 bodyBlock :: {BodyBlock}
 bodyBlock : bodyLine                                      { Line $1 (getPos $1) }
-          | "if" condBlocks                           { If $1 (Just $5) (getPos $1) }
-          | "if" condBlocks "else" "{" bodyBlocks "}" { If $1 (Just $5) (getPos $1) }
+          | "if" condBlocks                           { If $2 Nothing (getPos $1) }
+          | "if" condBlocks "else" "{" bodyBlocks "}" { If $2 (Just $5) (getPos $1) }
           | "while" expr "{" bodyBlocks "}"           { While $2 $4 (getPos $1) }
           | "for" IDENT "in" expr "{" bodyBlocks "}"  { For (Ident (identifierVal $2) (getPos $2)) $4 $6 (getPos $1) }
           | "repeat" expr "{" bodyBlocks "}"          { Repeat $2 $4 (getPos $1) }
-          | "switch" expr "{" switchCases "}"         { Switch $2 $4 (getPos $1) }
+          | "case" expr "{" switchCases "}"         { Switch $2 $4 (getPos $1) }
 
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
          | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
-         | "/" command            { CommandC $2 }
-         | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 Unknown (getPos $1)) }
+         | "/" command            { CommandC (command $2) }
+         | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPos $1)) (getPos $1)) }
          | "return"               { Return Nothing (getPos $1) }
          | "return" expr          { Return (Just $2) (getPos $1) }
 
-command :: {Command}
+command :: {[Either String Expr]}
 command : commandPart         { [$1] }
         | commandPart command { $1 : $2 }
 
@@ -194,47 +198,40 @@ exprMapPart :: {(Expr, Expr)}
 exprMapPart : expr ":" expr { ($1, $3) }
 
 expr :: {Expr}
-expr : value
-     | "-" expr                { Neg $2 Unknown (getPos $1) }
-     | expr "+" expr           { Add $1 $3 Unknown (getPos $1) }
-     | expr "-" expr           { Subtract $1 $3 Unknown (getPos $1) }
-     | expr "*" expr           { Multiply $1 $3 Unknown (getPos $1) }
-     | expr "/" expr           { Divide $1 $3 Unknown (getPos $1) }
-     | expr "%" expr           { Modulo $1 $3 Unknown (getPos $1) }
-     | expr "<" expr           { Less $1 $3 Unknown (getPos $1) }
-     | expr "<=" expr          { LessOrEqual $1 $3 Unknown (getPos $1) }
-     | expr ">" expr           { Greater $1 $3 Unknown (getPos $1) }
-     | expr ">=" expr          { GreaterOrEqual $1 $3 Unknown (getPos $1) }
-     | expr "==" expr          { Equal $1 $3 Unknown (getPos $1) }
-     | expr "!=" expr          { NotEqual $1 $3 Unknown (getPos $1) }
-     | expr "/\\" expr         { Max $1 $3 Unknown (getPos $1) }
-     | expr "\\/" expr         { Min $1 $3 Unknown (getPos $1) }
-     | "!" expr                { Not $2 Unknown (getPos $1) }
-     | expr "&" expr           { And $1 $3 Unknown (getPos $1) }
-     | expr "|" expr           { Or $1 $3 Unknown (getPos $1) }
-     | "[" exprList "]"        { List $2 Unknown (getPos $1) }
-     | "{" exprMap "}"         { Map $2 Unknown (getPos $1) }
-     | "[" expr ".." expr "]"  { Range (ClosedRange $2 $4 Unknown (getPos $1)) }
-     | "[" ".." expr "]"       { Range (LeftOpenRange $3 Unknown (getPos $1)) }
-     | "[" expr ".." "]"       { Range (RightOpenRange $2 Unknown (getPos $1)) }
-     | "[" expr "..." expr "]" { ListCont $2 $4 Unknown (getPos $1) }
+expr : value                   { Value $1 (Unknown (getPos $1)) (getPos $1) }
+     | "-" expr                { Neg $2 (Unknown (getPos $1)) (getPos $1) }
+     | expr "+" expr           { Add $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "-" expr           { Subtract $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "*" expr           { Multiply $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "/" expr           { Divide $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "%" expr           { Modulo $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "<" expr           { Less $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "<=" expr          { LessOrEqual $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr ">" expr           { Greater $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr ">=" expr          { GreaterOrEqual $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "==" expr          { Equal $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "!=" expr          { NotEqual $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "/\\" expr         { Max $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "\\/" expr         { Min $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | "!" expr                { Not $2 (Unknown (getPos $1)) (getPos $1) }
+     | expr "&" expr           { And $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | expr "|" expr           { Or $1 $3 (Unknown (getPos $1)) (getPos $1) }
+     | "[" exprList "]"        { List $2 (Unknown (getPos $1)) (getPos $1) }
+     | "{" exprMap "}"         { Map $2 (Unknown (getPos $1)) (getPos $1) }
+     | "[" expr ".." expr "]"  { Range (ClosedRange $2 $4 (Unknown (getPos $1)) (getPos $1)) }
+     | "[" ".." expr "]"       { Range (LeftOpenRange $3 (Unknown (getPos $1)) (getPos $1)) }
+     | "[" expr ".." "]"       { Range (RightOpenRange $2 (Unknown (getPos $1)) (getPos $1)) }
+     | "[" expr "..." expr "]" { ListCont $2 $4 (Unknown (getPos $1)) (getPos $1) }
      | "<" spadeType ">" expr  { TypeCast $4 $2 (getPos $1) }
      | "(" expr ")"            { Brackets $2 (getPos $1) }
 
-    BOOL            { TBool                 isTrue p }
-    IDENT           { TIdent                identifierVal p }
-    COMMAND_PART    { TCommandPart          commandPartVal p }
-    INT             { TInteger              intVal p }
-    REAL            { TReal                 realVal p }
-    STRING          { TString               stringVal p }
-
 value :: {Value}
-value = INT                    { Integer (intVal $1) Unknown (getPos $1) }
-      | REAL                   { Real (realVal $1) Unknown (getPos $1) }
-      | STRING                 { String (stringVal $1) Unknown (getPos $1) }
-      | IDENT                  { IdentV (identifierVal $1) Unknown (getPos $1) }
-      | BOOL                   { Bool (isTrue $1) Unknown (getPos $1) }
-      | IDENT "(" exprList ")" { CallV (Call (IdentV (identifierVal $1) Unknown (getPos $1)) $3 Unknown (getPos $1)) Unknown (getPos $1) }
+value : INT                    { IntegerV (intVal $1) (Unknown (getPos $1)) (getPos $1) }
+      | REAL                   { DoubleV (realVal $1) (Unknown (getPos $1)) (getPos $1) }
+      | STRING                 { StringV (stringVal $1) (Unknown (getPos $1)) (getPos $1) }
+      | IDENT                  { IdentV (Ident (identifierVal $1) (getPos $1)) (Unknown (getPos $1)) (getPos $1) }
+      | BOOL                   { BoolV (isTrue $1) (Unknown (getPos $1)) (getPos $1) }
+      | IDENT "(" exprList ")" { CallV (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPos $1)) (getPos $1)) (Unknown (getPos $1)) (getPos $1) }
 
 spadeType :: {SpadeType}
 spadeType : "bool"              { BoolT (getPos $1) }
@@ -254,7 +251,7 @@ typedIdents : typedIdent                 { [$1] }
             | typedIdent "," typedIdents { $1 : $3 }
 
 typedIdent :: {(Ident, SpadeType)}
-typedIdent : IDENT ":" spadeType { (identifierVal $1, $3) }
+typedIdent : IDENT ":" spadeType { (Ident (identifierVal $1) (getPos $1), $3) }
 
 maybe(p) : {- empty -} { Nothing }
          | p           { Just $1 }
@@ -266,10 +263,5 @@ parseError t = case t of
     TEoF -> alexError $ "Unexpected EoF"
     t' -> case position t' of
         AlexPn _ l c -> alexError $ show l ++ ":" ++ show c ++ ": " ++ "Parse error on " ++ show t
-
-resolveTuple :: [SpadeType] -> SpadeType
-resolveTuple [] = error "The impossible has happened, you seem to have an expression with no type, not even the unit?"
-resolveTuple [t] = t
-resolveTuple ts = ETuple ts
 
 }
