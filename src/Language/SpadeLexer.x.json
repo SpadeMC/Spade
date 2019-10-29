@@ -197,10 +197,10 @@
 		"lexeme": "!"
 	},
 	"Max": {
-		"lexeme": "/\\"
+		"lexeme": "/\\\\"
 	},
 	"Min": {
-		"lexeme": "\\/"
+		"lexeme": "\\\\/"
 	},
 	"LessThan": {
 		"lexeme": "<"
