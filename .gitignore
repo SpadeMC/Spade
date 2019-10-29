@@ -36,3 +36,6 @@ SpadeLexer.x
 # Happy outputs
 SpadeParser.hs
 SpadeParser.info
+
+# Patch
+*.orig
