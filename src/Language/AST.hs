@@ -115,6 +115,8 @@ data Expr
     | Map [(Expr, Expr)] SpadeType AlexPosn
     | Range RangeDef
     | ListCont Expr Expr SpadeType AlexPosn
+    | TypeCast Expr SpadeType AlexPosn
+    | Brackets Expr AlexPosn
     deriving (Show)
 
 data RangeDef
@@ -172,5 +174,5 @@ data SpadeType
     | FloatT AlexPosn
     | RangeT AlexPosn
     | ListT SpadeType AlexPosn
-    | MapT (Map String SpadeType) AlexPosn
+    | MapT [(Ident,SpadeType)] AlexPosn
     deriving (Show)

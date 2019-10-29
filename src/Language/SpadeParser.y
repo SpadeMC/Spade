@@ -195,52 +195,59 @@ exprMapPart : expr ":" expr { ($1, $3) }
 
 expr :: {Expr}
 expr : value
-     | "-" expr
-     | expr "+" expr
-     | expr "-" expr
-     | expr "*" expr
-     | expr "/" expr
-     | expr "%" expr
-     | expr "<" expr
-     | expr "<=" expr
-     | expr ">" expr
-     | expr ">=" expr
-     | expr "==" expr
-     | expr "!=" expr
-     | expr "/\\" expr
-     | expr "\\/" expr
-     | "!" expr
-     | expr "&" expr
-     | expr "|" expr
-     | "[" exprList "]"
-     | "{" exprMap "}"
-     | "[" expr ".." expr "]"
-     | "[" ".." expr "]"
-     | "[" expr ".." "]"
-     | "[" expr "..." expr "]"
-     | "<" spadeType ">" expr
-     | "(" expr ")"
+     | "-" expr                { Neg $2 Unknown (getPos $1) }
+     | expr "+" expr           { Add $1 $3 Unknown (getPos $1) }
+     | expr "-" expr           { Subtract $1 $3 Unknown (getPos $1) }
+     | expr "*" expr           { Multiply $1 $3 Unknown (getPos $1) }
+     | expr "/" expr           { Divide $1 $3 Unknown (getPos $1) }
+     | expr "%" expr           { Modulo $1 $3 Unknown (getPos $1) }
+     | expr "<" expr           { Less $1 $3 Unknown (getPos $1) }
+     | expr "<=" expr          { LessOrEqual $1 $3 Unknown (getPos $1) }
+     | expr ">" expr           { Greater $1 $3 Unknown (getPos $1) }
+     | expr ">=" expr          { GreaterOrEqual $1 $3 Unknown (getPos $1) }
+     | expr "==" expr          { Equal $1 $3 Unknown (getPos $1) }
+     | expr "!=" expr          { NotEqual $1 $3 Unknown (getPos $1) }
+     | expr "/\\" expr         { Max $1 $3 Unknown (getPos $1) }
+     | expr "\\/" expr         { Min $1 $3 Unknown (getPos $1) }
+     | "!" expr                { Not $2 Unknown (getPos $1) }
+     | expr "&" expr           { And $1 $3 Unknown (getPos $1) }
+     | expr "|" expr           { Or $1 $3 Unknown (getPos $1) }
+     | "[" exprList "]"        { List $2 Unknown (getPos $1) }
+     | "{" exprMap "}"         { Map $2 Unknown (getPos $1) }
+     | "[" expr ".." expr "]"  { Range (ClosedRange $2 $4 Unknown (getPos $1)) }
+     | "[" ".." expr "]"       { Range (LeftOpenRange $3 Unknown (getPos $1)) }
+     | "[" expr ".." "]"       { Range (RightOpenRange $2 Unknown (getPos $1)) }
+     | "[" expr "..." expr "]" { ListCont $2 $4 Unknown (getPos $1) }
+     | "<" spadeType ">" expr  { TypeCast $4 $2 (getPos $1) }
+     | "(" expr ")"            { Brackets $2 (getPos $1) }
+
+    BOOL            { TBool                 isTrue p }
+    IDENT           { TIdent                identifierVal p }
+    COMMAND_PART    { TCommandPart          commandPartVal p }
+    INT             { TInteger              intVal p }
+    REAL            { TReal                 realVal p }
+    STRING          { TString               stringVal p }
 
 value :: {Value}
-value = INT
-      | REAL
-      | STRING
-      | IDENT
-      | BOOL
-      | IDENT "(" exprList ")"
+value = INT                    { Integer (intVal $1) Unknown (getPos $1) }
+      | REAL                   { Real (realVal $1) Unknown (getPos $1) }
+      | STRING                 { String (stringVal $1) Unknown (getPos $1) }
+      | IDENT                  { IdentV (identifierVal $1) Unknown (getPos $1) }
+      | BOOL                   { Bool (isTrue $1) Unknown (getPos $1) }
+      | IDENT "(" exprList ")" { CallV (Call (IdentV (identifierVal $1) Unknown (getPos $1)) $3 Unknown (getPos $1)) Unknown (getPos $1) }
 
 spadeType :: {SpadeType}
-spadeType : "bool"
-          | "byte"
-          | "short"
-          | "int"
-          | "long"
-          | "float"
-          | "real"
-          | "string"
-          | "range"
-          | "[" spadeType "]"
-          | "{" typedIdents "}" { Map }
+spadeType : "bool"              { BoolT (getPos $1) }
+          | "byte"              { ByteT (getPos $1) }
+          | "short"             { ShortT (getPos $1) }
+          | "int"               { IntegerT (getPos $1) }
+          | "long"              { LongT (getPos $1) }
+          | "float"             { FloatT (getPos $1) }
+          | "real"              { DoubleT (getPos $1) }
+          | "string"            { StringT (getPos $1) }
+          | "range"             { RangeT (getPos $1) }
+          | "[" spadeType "]"   { ListT $2 (getPos $1) }
+          | "{" typedIdents "}" { MapT $2 (getPos $1) }
 
 typedIdents :: {[(Ident, SpadeType)]}
 typedIdents : typedIdent                 { [$1] }
