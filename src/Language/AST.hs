@@ -167,6 +167,7 @@ data SpadeType
     | RangeT Modifier AlexPosn
     | ListT SpadeType Modifier AlexPosn
     | MapT [(String,SpadeType)] Modifier AlexPosn
+    | Function [SpadeType] SpadeType AlexPosn
     deriving (Show)
 
 data Modifier

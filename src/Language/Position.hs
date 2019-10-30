@@ -122,19 +122,20 @@ instance GetPos NBTMove where
     getPos (NBTMove _ _ p) = p
 
 instance GetPos SpadeType where
-    getPos (Unknown _ p)  = p
-    getPos (Void _ p)     = p
-    getPos (IntegerT _ p) = p
-    getPos (DoubleT _ p)  = p
-    getPos (StringT _ p)  = p
-    getPos (BoolT _ p)    = p
-    getPos (ByteT _ p)    = p
-    getPos (ShortT _ p)   = p
-    getPos (LongT _ p)    = p
-    getPos (FloatT _ p)   = p
-    getPos (RangeT _ p)   = p
-    getPos (ListT _ _ p)  = p
-    getPos (MapT _ _ p)   = p
+    getPos (Unknown _ p)    = p
+    getPos (Void _ p)       = p
+    getPos (IntegerT _ p)   = p
+    getPos (DoubleT _ p)    = p
+    getPos (StringT _ p)    = p
+    getPos (BoolT _ p)      = p
+    getPos (ByteT _ p)      = p
+    getPos (ShortT _ p)     = p
+    getPos (LongT _ p)      = p
+    getPos (FloatT _ p)     = p
+    getPos (RangeT _ p)     = p
+    getPos (ListT _ _ p)    = p
+    getPos (MapT _ _ p)     = p
+    getPos (Function _ _ p) = p
 
 instance GetPos Token where
     getPos = position
