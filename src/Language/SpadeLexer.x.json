@@ -5,8 +5,7 @@
 		"comment": "An integral literal",
 		"extraFields": "intVal :: Integer",
 		"showExtraFields": "c",
-		"showBody": "show c",
-		"precendence": 2
+		"showBody": "show c"
 	},
 	"Bool": {
 		"lexeme": "@bool",
@@ -33,61 +32,80 @@
 		"showBody": "show s"
 	},
 	"BoolT": {
-		"lexeme": "bool"
+		"lexeme": "bool",
+		"precedence": 1
 	},
 	"ByteT": {
-		"lexeme": "byte"
+		"lexeme": "byte",
+		"precedence": 1
 	},
 	"ShortT": {
-		"lexeme": "short"
+		"lexeme": "short",
+		"precedence": 1
 	},
 	"IntT": {
-		"lexeme": "int"
+		"lexeme": "int",
+		"precedence": 1
 	},
 	"LongT": {
-		"lexeme": "long"
+		"lexeme": "long",
+		"precedence": 1
 	},
 	"FloatT": {
-		"lexeme": "float"
+		"lexeme": "float",
+		"precedence": 1
 	},
 	"RealT": {
-		"lexeme": "double"
+		"lexeme": "double",
+		"precedence": 1
 	},
 	"StringT": {
-		"lexeme": "string"
+		"lexeme": "string",
+		"precedence": 1
 	},
 	"RangeT": {
-		"lexeme": "range"
+		"lexeme": "range",
+		"precedence": 1
 	},
 	"Return": {
-		"lexeme": "return"
+		"lexeme": "return",
+		"precedence": 1
 	},
 	"If": {
-		"lexeme": "if"
+		"lexeme": "if",
+		"precedence": 1
 	},
 	"Else": {
-		"lexeme": "else"
+		"lexeme": "else",
+		"precedence": 1
 	},
 	"While": {
-		"lexeme": "while"
+		"lexeme": "while",
+		"precedence": 1
 	},
 	"Repeat": {
-		"lexeme": "repeat"
+		"lexeme": "repeat",
+		"precedence": 1
 	},
 	"Case": {
-		"lexeme": "case"
+		"lexeme": "case",
+		"precedence": 1
 	},
 	"For": {
-		"lexeme": "for"
+		"lexeme": "for",
+		"precedence": 1
 	},
 	"In": {
-		"lexeme": "in"
+		"lexeme": "in",
+		"precedence": 1
 	},
 	"Colon": {
-		"lexeme": ":"
+		"lexeme": ":",
+		"precedence": 2
 	},
 	"Dot": {
-		"lexeme": "."
+		"lexeme": ".",
+		"precedence": 2
 	},
 	"Ident": {
 		"lexeme": "@ident",
@@ -95,59 +113,70 @@
 		"comment": "An identifier",
 		"extraFields": "identifierVal :: String",
 		"showExtraFields": "s",
-		"showBody": "s"
+		"showBody": "s",
+		"precedence": -1
 	},
 	"ListCont": {
-		"lexeme": "..."
+		"lexeme": "...",
+		"precedence": 2
 	},
 	"Range": {
-		"lexeme": ".."
+		"lexeme": "..",
+		"precedence": 2
 	},
 	"NBTMove": {
-		"lexeme": "<-"
+		"lexeme": "<-",
+		"precedence": 2
 	},
 	"Swap": {
-		"lexeme": "><"
+		"lexeme": "><",
+		"precedence": 2
 	},
 	"Gets": {
-		"lexeme": "="
+		"lexeme": "=",
+		"precedence": 2
 	},
 	"Comma": {
-		"lexeme": ","
+		"lexeme": ",",
+		"precedence": 2
 	},
 	"ForwardSlash": {
-		"lexeme": "/"
+		"lexeme": "/",
+		"precedence": 2
 	},
 	"Command": {
 		"lexeme": "//",
 		"beginState": "command"
 	},
 	"LParenth": {
-		"lexeme": "("
+		"lexeme": "(",
+		"precedence": 4
 	},
 	"RParenth": {
-		"lexeme": ")"
+		"lexeme": ")",
+		"precedence": 3
 	},
 	"LBracket": {
-		"lexeme": "["
+		"lexeme": "[",
+		"precedence": 4
 	},
 	"RBracket": {
-		"lexeme": "]"
+		"lexeme": "]",
+		"precedence": 3
 	},
 	"LAngle": {
-		"lexeme": "<"
+		"lexeme": "<",
+		"precedence": 4
 	},
 	"RAngle": {
-		"lexeme": ">"
+		"lexeme": ">",
+		"precedence": 3
 	},
 	"SeqStart": {
 		"lexeme": "|>"
 	},
-	"Constant": {
+	"Dollar": {
 		"lexeme": "$"
-	},
-	"Pure": {
-		"lexeme": "~"
 	},
 	"CommandPart": {
 		"lexeme": "@commandPart",
@@ -168,13 +197,15 @@
 		"state": "command",
 		"beginState": "0"
 	},
-	"BlockSeparator": {
-		"lexeme": "@blockSeparator",
-		"literal": "}"
-	},
 	"BlockStarter": {
 		"lexeme": "@blockStarter",
-		"literal": "{"
+		"literal": "{",
+		"precedence": 4
+	},
+	"BlockSeparator": {
+		"lexeme": "@blockSeparator",
+		"literal": "}",
+		"precedence": 3
 	},
 	"LineComment": {
 		"lexeme": "@lineComment",
