@@ -143,12 +143,6 @@ data Call =
     Call Ident [Expr] SpadeType AlexPosn
     deriving (Show)
 
-data Modifier
-    = Pre AlexPosn
-    | Pure AlexPosn
-    | Impure AlexPosn
-    deriving (Show)
-
 -- | Data-structure to represent an identifier
 data Ident =
     Ident String AlexPosn
@@ -160,18 +154,24 @@ data NBTMove =
     deriving (Show)
 
 data SpadeType
-    = Unknown AlexPosn
-    | Void AlexPosn
-    | IntegerT AlexPosn
-    | DoubleT AlexPosn
-    | StringT AlexPosn
-    | IdentVT AlexPosn
-    | BoolT AlexPosn
-    | ByteT AlexPosn
-    | ShortT AlexPosn
-    | LongT AlexPosn
-    | FloatT AlexPosn
-    | RangeT AlexPosn
-    | ListT SpadeType AlexPosn
-    | MapT [(Ident,SpadeType)] AlexPosn
+    = Unknown Modifier AlexPosn
+    | Void Modifier AlexPosn
+    | IntegerT Modifier AlexPosn
+    | DoubleT Modifier AlexPosn
+    | StringT Modifier AlexPosn
+    | BoolT Modifier AlexPosn
+    | ByteT Modifier AlexPosn
+    | ShortT Modifier AlexPosn
+    | LongT Modifier AlexPosn
+    | FloatT Modifier AlexPosn
+    | RangeT Modifier AlexPosn
+    | ListT SpadeType Modifier AlexPosn
+    | MapT [(String,SpadeType)] Modifier AlexPosn
+    deriving (Show)
+
+data Modifier
+    = Prep
+    | Pure
+    | Impure
+    | UnknownM
     deriving (Show)
