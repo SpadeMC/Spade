@@ -1,3 +1,12 @@
+-- M4 definitions
+
+
+
+
+
+
+
+
 {
 {-|
 Module      : SpadeParser
@@ -106,9 +115,12 @@ import Language.Position (GetPos, getPos)
 ast :: {AST}
 ast : moduleItems   { AST $1 }
 
-moduleItems :: {[ModuleItem]}
-moduleItems : moduleItem                   { [$1] }
-            | moduleItem "\n" moduleItems  { $1 : $3 }
+moduleItems :: { [ModuleItem] }
+moduleItems : moduleItem { [$1] }
+	| moduleItem "\n" moduleItems { $1 : $3 }
+-- moduleItems :: {[ModuleItem]}
+-- moduleItems : moduleItem                   { [$1] }
+--             | moduleItem "\n" moduleItems  { $1 : $3 }
 
 moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
@@ -120,9 +132,9 @@ functionSignature :: {FunctionSignature}
 functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
                   | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void (getPos $1)) (getPos $1) }
 
-functionBodyBlocks :: {[FunctionBodyBlock]}
-functionBody : functionBody                         { [$1] }
-             | functionBody "\n" functionBodyBlocks { $1 : $3 }
+functionBodyBlocks :: { [FunctionBodyBlock] }
+functionBodyBlocks : functionBody { [$1] }
+	| functionBody "\n" functionBodyBlocks { $1 : $3 }
 
 functionBody :: {FunctionBodyBlock}
 functionBody : "|>" sequenceBodies { SequenceBody $2 (getPos $1) }
@@ -145,16 +157,16 @@ condBlocks : condBlock                        { [$1] }
 condBlock :: {CondBlock}
 condBlock : expr bodyBlocks { ($1, $2) }
 
-switchCases :: {[SwitchCase]}
-switchCases : switchCase                  { [$1] }
-            | switchCase "\n" switchCases { $1 : $3 }
+switchCases :: { [SwitchCase] }
+switchCases : switchCase { [$1] }
+	| switchCase "\n" switchCases { $1 : $3 }
 
 switchCase :: {SwitchCase}
 switchCase : expr ":" "{" bodyBlocks "}" { SwitchCase $1 $4 (getPos $1) }
 
-bodyBlocks :: {[BodyBlock]}
-bodyBlocks : {-empty-}                 { [] }
-           | bodyBlock "\n" bodyBlocks { $1 : $3 }
+bodyBlocks :: { [BodyBlock] }
+bodyBlocks : {- empty -} { [] }
+	| bodyBlock "\n" bodyBlocks { $1 : $3 }
 
 bodyBlock :: {BodyBlock}
 bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
@@ -173,6 +185,7 @@ bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVa
          | "return"               { Return Nothing (getPos $1) }
          | "return" expr          { Return (Just $2) (getPos $1) }
 
+
 command :: {[Either String Expr]}
 command : commandPart         { [$1] }
         | commandPart command { $1 : $2 }
@@ -181,17 +194,14 @@ commandPart :: {Either String Expr}
 commandPart : "$" "{" expr "}" { Right $3 }
             | COMMAND_PART     { Left (commandPartVal $1) }
 
-exprList :: {[Expr]}
-exprList : {- empty -}          { [] }
-         | exprListNonZero      { $1 }
 
-exprListNonZero :: {[Expr]}
-exprListNonZero : expr                      { [$1] }
-                | expr "," exprListNonZero  { $1 : $3 }
+exprList :: { [Expr] }
+exprList : {- empty -} { [] }
+	| expr "," exprList { $1 : $3 }
 
-exprMap :: {[(Expr, Expr)]}
-exprMap : exprMapPart             { [$1] }
-        | exprMapPart "," exprMap { $1 : $3 }
+exprMap :: { [(Expr, Expr)] }
+exprMap : {- empty -} { [] }
+	| exprMapPart "," exprMap { $1 : $3 }
 
 exprMapPart :: {(Expr, Expr)}
 exprMapPart : expr ":" expr { ($1, $3) }
@@ -245,15 +255,12 @@ spadeType : "bool"              { BoolT UnknownM (getPos $1) }
           | "[" spadeType "]"   { ListT $2 UnknownM (getPos $1) }
           | "{" typedIdents "}" { MapT $2 UnknownM (getPos $1) }
 
-typedIdents :: {[(String, SpadeType)]}
-typedIdents : typedIdent                 { [$1] }
-            | typedIdent "," typedIdents { $1 : $3 }
+typedIdents :: { [(String, SpadeType)] }
+typedIdents : {- empty -} { [] }
+	| typedIdent "," typedIdents { $1 : $3 }
 
 typedIdent :: {(String, SpadeType)}
 typedIdent : IDENT ":" spadeType { ((identifierVal $1) (getPos $1), $3) }
-
-maybe(p) : {- empty -} { Nothing }
-         | p           { Just $1 }
 
 {
 
