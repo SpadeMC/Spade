@@ -1,5 +1,7 @@
 # Spade
 
+![Spade logo](https://raw.githubusercontent.com/jf908/Spade/master/doc/img/spade_logo.png)
+
 Ever wanted to do something crazy with command blocks but the notation seemed too horrendous?
 Ever wanted to make an adventure map which reacts to events?
 Ever wanted to write code which uses both Minecraft commands and a server plugin?
