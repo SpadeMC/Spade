@@ -37,5 +37,8 @@ SpadeLexer.x
 SpadeParser.hs
 SpadeParser.info
 
+# M4
+SpadeParser.y
+
 # Patch
 *.orig
