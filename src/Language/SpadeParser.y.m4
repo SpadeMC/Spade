@@ -1,3 +1,6 @@
+-- M4 definitions
+include(`m4/defs.m4')
+
 {
 {-|
 Module      : SpadeParser
@@ -106,9 +109,7 @@ import Language.Position (GetPos, getPos)
 ast :: {AST}
 ast : moduleItems   { AST $1 }
 
-moduleItems :: {[ModuleItem]}
-moduleItems : moduleItem                   { [$1] }
-            | moduleItem "\n" moduleItems  { $1 : $3 }
+list1(moduleItems, ModuleItem, moduleItem, "\n")
 
 moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
@@ -120,9 +121,7 @@ functionSignature :: {FunctionSignature}
 functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
                   | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void (getPos $1)) (getPos $1) }
 
-functionBodyBlocks :: {[FunctionBodyBlock]}
-functionBody : functionBody                         { [$1] }
-             | functionBody "\n" functionBodyBlocks { $1 : $3 }
+list1(functionBodyBlocks, FunctionBodyBlock, functionBody, "\n")
 
 functionBody :: {FunctionBodyBlock}
 functionBody : "|>" sequenceBodies { SequenceBody $2 (getPos $1) }
@@ -145,16 +144,12 @@ condBlocks : condBlock                        { [$1] }
 condBlock :: {CondBlock}
 condBlock : expr bodyBlocks { ($1, $2) }
 
-switchCases :: {[SwitchCase]}
-switchCases : switchCase                  { [$1] }
-            | switchCase "\n" switchCases { $1 : $3 }
+list1(switchCases, SwitchCase, switchCase, "\n")
 
 switchCase :: {SwitchCase}
 switchCase : expr ":" "{" bodyBlocks "}" { SwitchCase $1 $4 (getPos $1) }
 
-bodyBlocks :: {[BodyBlock]}
-bodyBlocks : {-empty-}                 { [] }
-           | bodyBlock "\n" bodyBlocks { $1 : $3 }
+list(bodyBlocks, BodyBlock, bodyBlock, "\n")
 
 bodyBlock :: {BodyBlock}
 bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
@@ -173,25 +168,11 @@ bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVa
          | "return"               { Return Nothing (getPos $1) }
          | "return" expr          { Return (Just $2) (getPos $1) }
 
-command :: {[Either String Expr]}
-command : commandPart         { [$1] }
-        | commandPart command { $1 : $2 }
+include(`MCFunctionParser.y.m4')
 
-commandPart :: {Either String Expr}
-commandPart : "$" "{" expr "}" { Right $3 }
-            | COMMAND_PART     { Left (commandPartVal $1) }
+list(exprList, Expr, expr, `","')
 
-exprList :: {[Expr]}
-exprList : {- empty -}          { [] }
-         | exprListNonZero      { $1 }
-
-exprListNonZero :: {[Expr]}
-exprListNonZero : expr                      { [$1] }
-                | expr "," exprListNonZero  { $1 : $3 }
-
-exprMap :: {[(Expr, Expr)]}
-exprMap : exprMapPart             { [$1] }
-        | exprMapPart "," exprMap { $1 : $3 }
+list(exprMap, `(Expr, Expr)', exprMapPart, `","')
 
 exprMapPart :: {(Expr, Expr)}
 exprMapPart : expr ":" expr { ($1, $3) }
@@ -245,15 +226,10 @@ spadeType : "bool"              { BoolT UnknownM (getPos $1) }
           | "[" spadeType "]"   { ListT $2 UnknownM (getPos $1) }
           | "{" typedIdents "}" { MapT $2 UnknownM (getPos $1) }
 
-typedIdents :: {[(String, SpadeType)]}
-typedIdents : typedIdent                 { [$1] }
-            | typedIdent "," typedIdents { $1 : $3 }
+list(typedIdents, `(String, SpadeType)', typedIdent, `","')
 
 typedIdent :: {(String, SpadeType)}
 typedIdent : IDENT ":" spadeType { ((identifierVal $1) (getPos $1), $3) }
-
-maybe(p) : {- empty -} { Nothing }
-         | p           { Just $1 }
 
 {
 
