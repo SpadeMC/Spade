@@ -24,7 +24,7 @@ import           Language.SpadeParser (parseSpade)
 import           Results.Results      (Error (..), Result (..))
 
 -- | Parse a file of "-" for @stdin@
-parse :: String -> IO (Result AST)
+parse :: FilePath -> IO (Result AST)
 parse "-" = parse' getContents
 parse f   = parseFile f
 
@@ -43,4 +43,6 @@ parseString :: String -> Result AST
 parseString s = case runAlex s parseSpade of
     Right x -> Pass x
     Left m  -> Fail [Error { message = m, locationInfo = loc }]
-        where loc = AlexPn 0 (read . takeWhile (/= ':') $ m) (read . dropWhile (/= ':') . tail . takeWhile (/= ':') $ m)
+        -- TODO: Get real location
+        -- where loc = AlexPn 0 (read . takeWhile (/= ':') $ m) (read . dropWhile (/= ':') . tail . takeWhile (/= ':') $ m)
+        where loc = AlexPn 0 0 0

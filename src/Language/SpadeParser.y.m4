@@ -120,7 +120,7 @@ functionSignature :: {FunctionSignature}
 functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
                   | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void UnknownM, getPos $1) (getPos $1) }
 
-list1(functionBodyBlocks, FunctionBodyBlock, functionBody, "\n")
+list(functionBodyBlocks, FunctionBodyBlock, functionBody, "\n")
 
 functionBody :: {FunctionBodyBlock}
 functionBody : "|>" sequenceBodies { SequenceBody $2 (getPos $1) }

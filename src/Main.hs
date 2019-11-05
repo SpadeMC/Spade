@@ -12,7 +12,7 @@ This module provides a CLI for dig.
 -}
 
 import           Generator.Generator         (generate)
-import           Language.SpadeParserWrapper (parse)
+import           Language.SpadeParserWrapper (parseString)
 -- import           Optimiser.Optimiser         (optimise)
 import           Results.Results             (Errors, Result (..))
 import           System.Exit                 (exitFailure)
@@ -42,7 +42,8 @@ main = do
 
 compile :: String -> IO (Result [(FilePath,String)])
 compile s = do
-    parsed <- parse s
+    -- parsed <- parse s
+    let parsed = parseString s
     -- do
     --     checkTypes
     --     return . optimise
