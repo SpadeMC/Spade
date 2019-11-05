@@ -21,14 +21,14 @@ The top level of a file only contains constants, function definitions and
 All variables are either have the integer or boolean type.
 
 ```
-$c = 'Constant value'
+c = 'Constant value'
 
 v = 3
 ```
 
 ## Types
 
-### Primitives
+### **Primitives**
 
 | Type | Example |
 | --- | --- |
@@ -124,6 +124,12 @@ repeat 10 {
 
 Similar to arrays from JSON
 
+```
+l = [1,6,8]
+
+l2 = [{ id: 0 }, { bar: 'foo' }]
+```
+
 ### List Constructor Shorthand
 
 ```
@@ -136,6 +142,12 @@ Similar to arrays from JSON
 ## Maps
 
 Similar to objects from JSON
+
+```
+m = {
+	foo: 'bar'
+}
+```
 
 ## Sequences
 
@@ -164,9 +176,21 @@ some.path.here[0] <- {
 
 ## Commands
 
-For functionality not available in Spade's API, you can always use plain commands with the `//` syntax.
+For functionality not available in Spade's API, you can always use plain commands by starting lines with `/`.
 
 ```
--- Runs any command with //
-//tp @p 0 100 0
+-- Runs any command with /
+/tp @p 0 100 0
+```
+
+### Inserting preprocessed values
+
+You can insert preprocessed values into commands.
+
+```
+a = 64
+b = 64
+c = 128
+
+/tp @p (a) (b) (c)
 ```
