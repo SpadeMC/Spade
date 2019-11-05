@@ -110,9 +110,6 @@ ast :: {AST}
 ast : moduleItems   { AST $1 }
 
 list1(moduleItems, ModuleItem, moduleItem, "\n")
--- moduleItems :: {[ModuleItem]}
--- moduleItems : moduleItem                   { [$1] }
---             | moduleItem "\n" moduleItems  { $1 : $3 }
 
 moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
