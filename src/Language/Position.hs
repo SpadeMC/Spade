@@ -21,6 +21,10 @@ import           Language.SpadeLexer (AlexPosn (..), Token, position)
 class GetPos a where
     getPos :: a -> AlexPosn -- ^ Return the position in the input stream
 
+instance GetPos a => GetPos [a] where
+    getPos (x:_) = getPos x
+    getPos []    = error "Attempted to get position of empty list"
+
 instance GetPos AST where
     getPos (AST (x:_)) = getPos x
     getPos (AST _)     = error "Attempted to get position from empty AST"
@@ -120,22 +124,6 @@ instance GetPos Ident where
 
 instance GetPos NBTMove where
     getPos (NBTMove _ _ p) = p
-
-instance GetPos SpadeType where
-    getPos (Unknown _ p)    = p
-    getPos (Void _ p)       = p
-    getPos (IntegerT _ p)   = p
-    getPos (DoubleT _ p)    = p
-    getPos (StringT _ p)    = p
-    getPos (BoolT _ p)      = p
-    getPos (ByteT _ p)      = p
-    getPos (ShortT _ p)     = p
-    getPos (LongT _ p)      = p
-    getPos (FloatT _ p)     = p
-    getPos (RangeT _ p)     = p
-    getPos (ListT _ _ p)    = p
-    getPos (MapT _ _ p)     = p
-    getPos (Function _ _ p) = p
 
 instance GetPos Token where
     getPos = position

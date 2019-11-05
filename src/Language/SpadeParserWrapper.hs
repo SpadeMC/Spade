@@ -19,9 +19,9 @@ module Language.SpadeParserWrapper
     ) where
 
 import           Language.AST         (AST)
-import           Language.SpadeLexer  (runAlex)
+import           Language.SpadeLexer  (AlexPosn (AlexPn), runAlex)
 import           Language.SpadeParser (parseSpade)
-import           Results.Results      (Result (..))
+import           Results.Results      (Error (..), Result (..))
 
 -- | Parse a file of "-" for @stdin@
 parse :: String -> IO (Result AST)
@@ -42,4 +42,5 @@ parse' c = do
 parseString :: String -> Result AST
 parseString s = case runAlex s parseSpade of
     Right x -> Pass x
-    Left m  -> Fail []
+    Left m  -> Fail [Error { message = m, locationInfo = loc }]
+        where loc = AlexPn 0 (read . takeWhile (/= ':') $ m) (read . dropWhile (/= ':') . tail . takeWhile (/= ':') $ m)

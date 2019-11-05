@@ -40,7 +40,6 @@ import Language.Position (GetPos, getPos)
     INT             { TInteger              intVal p }
     REAL            { TReal                 realVal p }
     STRING          { TString               stringVal p }
-    LINE_COMMENT    { TLineComment          p }
     ":"             { TColon                p }
     "}"             { TBlockSeparator       p }
     "{"             { TBlockStarter         p }
@@ -119,7 +118,7 @@ functionDef : functionSignature "{" functionBodyBlocks "}" { FunctionDef $1 $3 (
 
 functionSignature :: {FunctionSignature}
 functionSignature : IDENT "(" typedIdents ")" ":" spadeType { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 $6 (getPos $1)  }
-                  | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void (getPos $1)) (getPos $1) }
+                  | IDENT "(" typedIdents ")" { FunctionSignature (Ident (identifierVal $1) (getPos $1)) $3 (Void UnknownM, getPos $1) (getPos $1) }
 
 list1(functionBodyBlocks, FunctionBodyBlock, functionBody, "\n")
 
@@ -163,8 +162,8 @@ bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
          | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
-         | "/" command            { CommandC (command $2) }
-         | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1)) (getPos $1)) (getPos $1)) }
+         | "/" command            { CommandC (Command $2 (Unknown UnknownM) (getPos $1)) }
+         | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1))) (getPos $1)) }
          | "return"               { Return Nothing (getPos $1) }
          | "return" expr          { Return (Just $2) (getPos $1) }
 
@@ -178,58 +177,63 @@ exprMapPart :: {(Expr, Expr)}
 exprMapPart : expr ":" expr { ($1, $3) }
 
 expr :: {Expr}
-expr : value                   { Value $1 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "-" expr                { Neg $2 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "+" expr           { Add $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "-" expr           { Subtract $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "*" expr           { Multiply $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "/" expr           { Divide $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "%" expr           { Modulo $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "<" expr           { Less $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "<=" expr          { LessOrEqual $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr ">" expr           { Greater $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr ">=" expr          { GreaterOrEqual $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "==" expr          { Equal $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "!=" expr          { NotEqual $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "/\\" expr         { Max $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "\\/" expr         { Min $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "!" expr                { Not $2 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "&" expr           { And $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | expr "|" expr           { Or $1 $3 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "[" exprList "]"        { List $2 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "{" exprMap "}"         { Map $2 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "[" expr ".." expr "]"  { Range (ClosedRange $2 $4 (Unknown UnknownM (getPos $1)) (getPos $1)) }
-     | "[" ".." expr "]"       { Range (LeftOpenRange $3 (Unknown UnknownM (getPos $1)) (getPos $1)) }
-     | "[" expr ".." "]"       { Range (RightOpenRange $2 (Unknown UnknownM (getPos $1)) (getPos $1)) }
-     | "[" expr "..." expr "]" { ListCont $2 $4 (Unknown UnknownM (getPos $1)) (getPos $1) }
-     | "<" spadeType ">" expr  { TypeCast $4 $2 (getPos $1) }
+expr : value                   { Value $1 (Unknown UnknownM) (getPos $1) }
+     | "-" expr                { Neg $2 (Unknown UnknownM) (getPos $1) }
+     | expr "+" expr           { Add $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "-" expr           { Subtract $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "*" expr           { Multiply $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "/" expr           { Divide $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "%" expr           { Modulo $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "<" expr           { Less $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "<=" expr          { LessOrEqual $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr ">" expr           { Greater $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr ">=" expr          { GreaterOrEqual $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "==" expr          { Equal $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "!=" expr          { NotEqual $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "/\\" expr         { Max $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "\\/" expr         { Min $1 $3 (Unknown UnknownM) (getPos $1) }
+     | "!" expr                { Not $2 (Unknown UnknownM) (getPos $1) }
+     | expr "&" expr           { And $1 $3 (Unknown UnknownM) (getPos $1) }
+     | expr "|" expr           { Or $1 $3 (Unknown UnknownM) (getPos $1) }
+     | "[" exprList "]"        { List $2 (Unknown UnknownM) (getPos $1) }
+     | "{" exprMap "}"         { Map $2 (Unknown UnknownM) (getPos $1) }
+     | "[" expr ".." expr "]"  { Range (ClosedRange $2 $4 (Unknown UnknownM) (getPos $1)) }
+     | "[" ".." expr "]"       { Range (LeftOpenRange $3 (Unknown UnknownM) (getPos $1)) }
+     | "[" expr ".." "]"       { Range (RightOpenRange $2 (Unknown UnknownM) (getPos $1)) }
+     | "[" expr "..." expr "]" { ListCont $2 $4 (Unknown UnknownM) (getPos $1) }
+     | "<" spadeType ">" expr  { TypeCast $4 (fst $2) (getPos $1) }
      | "(" expr ")"            { Brackets $2 (getPos $1) }
 
 value :: {Value}
-value : INT                    { IntegerV (intVal $1) (Unknown UnknownM (getPos $1)) (getPos $1) }
-      | REAL                   { DoubleV (realVal $1) (Unknown UnknownM (getPos $1)) (getPos $1) }
-      | STRING                 { StringV (stringVal $1) (Unknown UnknownM (getPos $1)) (getPos $1) }
-      | IDENT                  { IdentV (Ident (identifierVal $1) (getPos $1)) (Unknown UnknownM (getPos $1)) (getPos $1) }
-      | BOOL                   { BoolV (isTrue $1) (Unknown UnknownM (getPos $1)) (getPos $1) }
-      | IDENT "(" exprList ")" { CallV (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1)) (getPos $1)) (getPos $1)) (Unknown (getPurity (identifierVal $1)) (getPos $1)) (getPos $1) }
+value : INT                    { IntegerV (intVal $1) (Unknown UnknownM) (getPos $1) }
+      | REAL                   { DoubleV (realVal $1) (Unknown UnknownM) (getPos $1) }
+      | STRING                 { StringV (stringVal $1) (Unknown UnknownM) (getPos $1) }
+      | IDENT                  { IdentV (Ident (identifierVal $1) (getPos $1)) (Unknown UnknownM) (getPos $1) }
+      | BOOL                   { BoolV (isTrue $1) (Unknown UnknownM) (getPos $1) }
+      | IDENT "(" exprList ")" { CallV (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1))) (getPos $1)) (Unknown (getPurity (identifierVal $1))) (getPos $1) }
 
-spadeType :: {SpadeType}
-spadeType : "bool"              { BoolT UnknownM (getPos $1) }
-          | "byte"              { ByteT UnknownM (getPos $1) }
-          | "short"             { ShortT UnknownM (getPos $1) }
-          | "int"               { IntegerT UnknownM (getPos $1) }
-          | "long"              { LongT UnknownM (getPos $1) }
-          | "float"             { FloatT UnknownM (getPos $1) }
-          | "real"              { DoubleT UnknownM (getPos $1) }
-          | "string"            { StringT UnknownM (getPos $1) }
-          | "range"             { RangeT UnknownM (getPos $1) }
-          | "[" spadeType "]"   { ListT $2 UnknownM (getPos $1) }
-          | "{" typedIdents "}" { MapT $2 UnknownM (getPos $1) }
+spadeType :: {(SpadeType,AlexPosn)}
+spadeType : "bool"              { (BoolT UnknownM, getPos $1) }
+          | "byte"              { (ByteT UnknownM, getPos $1) }
+          | "short"             { (ShortT UnknownM, getPos $1) }
+          | "int"               { (IntegerT UnknownM, getPos $1) }
+          | "long"              { (LongT UnknownM, getPos $1) }
+          | "float"             { (FloatT UnknownM, getPos $1) }
+          | "real"              { (DoubleT UnknownM, getPos $1) }
+          | "string"            { (StringT UnknownM, getPos $1) }
+          | "range"             { (RangeT UnknownM, getPos $1) }
+          | "[" spadeType "]"   { (ListT (fst $2) UnknownM, getPos $1) }
+          | "{" typedStrings "}" { (MapT $2 UnknownM, getPos $1) }
 
-list(typedIdents, `(String, SpadeType)', typedIdent, `","')
+list(typedIdents, `(Ident, SpadeType, AlexPosn)', typedIdent, `","')
 
-typedIdent :: {(String, SpadeType)}
-typedIdent : IDENT ":" spadeType { ((identifierVal $1) (getPos $1), $3) }
+typedIdent :: {(Ident, SpadeType, AlexPosn)}
+typedIdent : IDENT ":" spadeType { (Ident (identifierVal $1) (getPos $1), fst $3, snd $3) }
+
+list(typedStrings, `(String, SpadeType)', typedString, `","')
+
+typedString :: {(String, SpadeType)}
+typedString : IDENT ":" spadeType { (identifierVal $1, fst $3) }
 
 {
 

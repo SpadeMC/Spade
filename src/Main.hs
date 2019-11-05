@@ -13,11 +13,11 @@ This module provides a CLI for dig.
 
 import           Generator.Generator         (generate)
 import           Language.SpadeParserWrapper (parse)
-import           Modules.Results             (Result (..))
-import           Optimiser.Optimiser         (optimise)
+-- import           Optimiser.Optimiser         (optimise)
+import           Results.Results             (Errors, Result (..))
 import           System.Exit                 (exitFailure)
 import           System.IO                   (hPutStrLn, stderr)
-import           TypeChecker.TypeChecker     (typeCheck)
+import           TypeChecker.TypeChecker     (checkTypes)
 
 main :: IO ()
 main = do
@@ -26,24 +26,33 @@ main = do
             getContents
         else
             readFile "asdf.sp"
+
     -- Compile the code
-    let rs = compile c
+    rs <- compile c
 
     -- Output
     case rs of
         Pass fs -> if True then
-                print rs
+                print fs
             else
-                writeFile "asdf.mcfunction"
+                writeFile "asdf.mcfunction" $ show fs
         Fail es -> do
             printErrors es
             exitFailure
 
-compile :: String -> Result [(FilePath,String)]
-compile = do
-    checkTypes a
-    optimise
-    generate
+compile :: String -> IO (Result [(FilePath,String)])
+compile s = do
+    parsed <- parse s
+    -- do
+    --     checkTypes
+    --     return . optimise
+    --     return . generate
+    -- parsed :: Result AST
+    -- checkTypes :: AST -> Result AST
+    let typed = parsed >>= checkTypes
+    -- Add the preprocessor
+    -- optimise
+    return (typed >>= generate)
 
 printErrors :: Errors -> IO ()
 printErrors [] = return ()

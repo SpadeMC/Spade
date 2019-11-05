@@ -35,7 +35,7 @@ data FunctionDef =
 
 -- | Describes the definition of the type of a function
 data FunctionSignature =
-    FunctionSignature Ident [(Ident, SpadeType)] SpadeType AlexPosn
+    FunctionSignature Ident [(Ident, SpadeType, AlexPosn)] (SpadeType,AlexPosn) AlexPosn
     deriving (Show)
 
 -- | Describes the definition of blocks or sequences
@@ -154,20 +154,20 @@ data NBTMove =
     deriving (Show)
 
 data SpadeType
-    = Unknown Modifier AlexPosn
-    | Void Modifier AlexPosn
-    | IntegerT Modifier AlexPosn
-    | DoubleT Modifier AlexPosn
-    | StringT Modifier AlexPosn
-    | BoolT Modifier AlexPosn
-    | ByteT Modifier AlexPosn
-    | ShortT Modifier AlexPosn
-    | LongT Modifier AlexPosn
-    | FloatT Modifier AlexPosn
-    | RangeT Modifier AlexPosn
-    | ListT SpadeType Modifier AlexPosn
-    | MapT [(String,SpadeType)] Modifier AlexPosn
-    | Function [SpadeType] SpadeType AlexPosn
+    = Unknown Modifier
+    | Void Modifier
+    | IntegerT Modifier
+    | DoubleT Modifier
+    | StringT Modifier
+    | BoolT Modifier
+    | ByteT Modifier
+    | ShortT Modifier
+    | LongT Modifier
+    | FloatT Modifier
+    | RangeT Modifier
+    | ListT SpadeType Modifier
+    | MapT [(String,SpadeType)] Modifier
+    | Function [SpadeType] SpadeType
     deriving (Show)
 
 data Modifier

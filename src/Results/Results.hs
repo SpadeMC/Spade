@@ -10,7 +10,7 @@ Language    : Haskell2010
 
 This module defines data-structures to be used for results in dig
 -}
-module Results.Results (Result, Error(..), Errors) where
+module Results.Results (Result (..), Error(..), Errors) where
 
 import           Results.Errors (Error (..), Errors)
 
