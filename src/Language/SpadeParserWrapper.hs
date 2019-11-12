@@ -14,7 +14,6 @@ It extends functionality by allowing the format of strings, arbitrary files on d
 module Language.SpadeParserWrapper
     ( AST
     , parse
-    , parseFile
     , parseString
     ) where
 
@@ -25,18 +24,8 @@ import           Results.Results      (Error (..), Result (..))
 
 -- | Parse a file of "-" for @stdin@
 parse :: FilePath -> IO (Result AST)
-parse "-" = parse' getContents
-parse f   = parseFile f
-
--- | Parse an arbitrary file on disk
-parseFile :: FilePath -> IO (Result AST)
-parseFile name = parse' $ readFile name
-
--- | Parse an IO String (e.g. raw result of reading a file)
-parse' :: IO String -> IO (Result AST)
-parse' c = do
-    s <- c
-    return $ parseString s
+parse "-" = parseString <$> getContents
+parse f   = parseString <$> readFile f
 
 -- | Parse a given string
 parseString :: String -> Result AST

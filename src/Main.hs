@@ -16,7 +16,7 @@ import           Language.SpadeParserWrapper (parseString)
 -- import           Optimiser.Optimiser         (optimise)
 import           Results.Results             (Errors, Result (..))
 import           System.Exit                 (exitFailure)
-import           System.IO                   (hPutStrLn, stderr)
+import           System.IO                   (hPrint, stderr)
 import           TypeChecker.TypeChecker     (checkTypes)
 
 main :: IO ()
@@ -58,5 +58,5 @@ compile s = do
 printErrors :: Errors -> IO ()
 printErrors [] = return ()
 printErrors (e:es) = do
-    hPutStrLn stderr $ show e
+    hPrint stderr e
     printErrors es
