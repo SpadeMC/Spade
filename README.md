@@ -1,4 +1,6 @@
-![Spade logo](./doc/img/spade_logo.svg)
+<p align="center">
+	<img src="./doc/img/spade_logo.svg" alt="Spade logo"/>
+</p>
 
 Ever wanted to do something crazy with command blocks but the notation seemed too horrendous?
 Ever wanted to make an adventure map which reacts to events?
