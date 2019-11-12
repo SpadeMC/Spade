@@ -1,5 +1,3 @@
-# Spade
-
 ![Spade logo](./doc/img/spade_logo.svg)
 
 Ever wanted to do something crazy with command blocks but the notation seemed too horrendous?
