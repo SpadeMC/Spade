@@ -1,6 +1,6 @@
 # Spade
 
-![Spade logo](https://raw.githubusercontent.com/jf908/Spade/master/doc/img/spade_logo.png)
+![Spade logo](./doc/img/spade_logo.svg)
 
 Ever wanted to do something crazy with command blocks but the notation seemed too horrendous?
 Ever wanted to make an adventure map which reacts to events?
@@ -39,7 +39,7 @@ The following should suffice:
 - `happy` Haskell parser generator
 - `m4` GNU macro language
 
-### License 
+### License
 
 Spade and Dig are developed under the MIT license.
 
