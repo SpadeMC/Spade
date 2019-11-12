@@ -29,33 +29,31 @@ all: build ## Build everything
 build: ./spade ## Build everything, explicitly
 .PHONY: build
 
-./spade: ./.stack-work/install/x86_64-linux-tinfo6/a4fefd2a9618441c5b464352bd9d27949d738f84f553d0be92299367e59678e1/8.6.5/bin/spade
-	ln -sf $^ $@
-.DELETE_ON_ERROR: ./spade
+./spade: $(SOURCE_FILES)
+	stack install --local-bin-path .
 
-./.stack-work/install/x86_64-linux-tinfo6/a4fefd2a9618441c5b464352bd9d27949d738f84f553d0be92299367e59678e1/8.6.5/bin/spade: $(SOURCE_FILES)
-	stack build
-
-./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x ./src/Langauge/SpadeLexer.hs.patch
+./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x ./src/Language/SpadeLexer.hs.patch
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
 	patch -F 1 $@ ./src/Language/SpadeLexer.hs.patch
 .DELETE_ON_ERROR: ./src/Language/SpadeLexer.hs
 
-./src/Language/SpadeLexer.x: ./deps/alexergen/alexergen ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
-	cd ./deps/alexergen/ && stack exec --cwd ../../ -- alexergen $(subst deps/alexergen/alexergen,,$^) > ../../$@
+./src/Language/SpadeLexer.x: ./deps/alexergen/src/Main.hs ./src/Language/SpadeLexer.x.json ./src/Language/SpadeLexer.x.start ./src/Language/SpadeLexer.x.end
+	cd ./deps/alexergen/ && stack exec --cwd ../../ -- alexergen $(subst deps/alexergen/src/Main.hs,,$^) > ../../$@
 
-./deps/alexergen/alexergen:
+# $(shell find ./deps/alexergen -name '*.hs')
+
+./deps/alexergen/src/Main.hs:
 	make -C ./deps/alexergen
 
 ./src/Language/SpadeParser.hs: ./src/Language/SpadeParser.y
 	$(PARSER_GENERATOR) $(PARSER_GENERATOR_FLAGS) -i./src/Language/SpadeParser.info $< -o $@
 .DELETE_ON_ERROR: ./src/Language/SpadeParser.hs
 
-./src/Language/SpadeParser.y: ./src/Language/SpadeParser.y.m4 ./src/Langauge/MCFunctionParser.y.m4 ./src/Language/m4/defs.m4
+./src/Language/SpadeParser.y: ./src/Language/SpadeParser.y.m4 ./src/Language/MCFunctionParser.y.m4 ./src/Language/m4/defs.m4
 	m4 -I ./src/Language/ < $< > $@
 %.patch:;
 
-./src/Langauge/MCFunctionParser.y.m4: ./src/Language/m4/defs.m4
+./src/Language/MCFunctionParser.y.m4: ./src/Language/m4/defs.m4
 
 ./Args.hs: spade.json
 	arggen_haskell < $^ > $@
