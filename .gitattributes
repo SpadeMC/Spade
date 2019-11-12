@@ -3,3 +3,4 @@ src/Language/*.x  linguist-language=Haskell
 src/Language/*.x.start  linguist-language=Haskell
 src/Language/*.x.end  linguist-language=Haskell
 src/Language/*.y  linguist-language=Haskell
+src/Language/*.y.m4  linguist-language=Haskell
