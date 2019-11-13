@@ -16,7 +16,7 @@ It makes it much easier to take total and unquestionable command of all parts of
 - Syntactic sugaring to allow useful tasks to be used by the programmer with minimal effort
 - A strict type-system to catch errors before runtime and _without_ affecting efficiency (better than Java)
 - A single language which can be run both on the server and client sides
-- The compiler can run on any common operating system (Windows, MacOS and Linux)
+- A compiler can run on any common operating system (Windows, MacOS and Linux)
 
 ## Installation
 
