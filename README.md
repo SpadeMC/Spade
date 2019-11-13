@@ -20,24 +20,45 @@ It makes it much easier to take total and unquestionable command of all parts of
 
 ## Installation
 
-### Simple Download
+### Download (_Super Easy_)
 
-You'll need:
+We maintain [installers][releases] for Windows, MacOS and Linux on our releases page.
 
-- A PC running Windows, MacOS or Linux
-- Some space
-
-### Built from Scratch
+### Built from Scratch (_Hard, just for development_)
 
 If you'd like to build directly from the source code, you will need a number of smaller tools.
-The following should suffice:
+Whip up the terminal, and make sure the following are installed:
 
-- `git` distributed version-control system
-- `stack` build tool for Haskell
-- `make` GNU generic build system
-- `alex` Haskell lexical analyser generator
-- `happy` Haskell parser generator
-- `m4` GNU macro language
+- [`git`][git] distributed version-control system
+- [`stack`][stack] build tool for Haskell
+- [`make`][make] GNU generic build system
+- [`alex`][alex] Haskell lexical analyser generator
+- [`happy`][happy] Haskell parser generator
+- [`m4`][m4] GNU macro language
+
+Then, download our code and compile it:
+
+```bash
+git clone https://github.com/jf908/spade
+cd spade
+make
+```
+
+Once this succeeds, the compiler can be run:
+
+```bash
+./dig
+```
+
+Use `./dig --help` to get more help.
+
+To install, run:
+```bash
+make install
+```
+
+Et voilà!
+One (custom) version of `dig`.
 
 ### License
 
@@ -45,4 +66,15 @@ Spade and Dig are developed under the MIT license.
 
 ### Authors
 
-We are not affiliated with Mojang AB.
+Ed and Josh have been playing Minecraft since 2012 and probably need to go outside more.
+We are both Computer Scientists whose specialisms include formal languages and systems development, compiler design and programming language principles.
+
+_We are not affiliated with Mojang AB._
+
+[releases]: https://github.com/jf908/Spade/releases
+[git]: https://git-scm.com
+[stack]: https://docs.haskellstack.org/en/stable/README/
+[make]: https://www.gnu.org/software/make/
+[alex]: https://www.haskell.org/alex/
+[happy]: https://www.haskell.org/happy/
+[m4]: https://www.gnu.org/software/m4/
