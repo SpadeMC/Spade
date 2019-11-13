@@ -32,39 +32,39 @@
 		"showBody": "show s"
 	},
 	"BoolT": {
-		"lexeme": "bool",
+		"lexeme": "Bool",
 		"precedence": 1
 	},
 	"ByteT": {
-		"lexeme": "byte",
+		"lexeme": "Byte",
 		"precedence": 1
 	},
 	"ShortT": {
-		"lexeme": "short",
+		"lexeme": "Short",
 		"precedence": 1
 	},
 	"IntT": {
-		"lexeme": "int",
+		"lexeme": "Int",
 		"precedence": 1
 	},
 	"LongT": {
-		"lexeme": "long",
+		"lexeme": "Long",
 		"precedence": 1
 	},
 	"FloatT": {
-		"lexeme": "float",
+		"lexeme": "Float",
 		"precedence": 1
 	},
 	"RealT": {
-		"lexeme": "double",
+		"lexeme": "Double",
 		"precedence": 1
 	},
 	"StringT": {
-		"lexeme": "string",
+		"lexeme": "String",
 		"precedence": 1
 	},
 	"RangeT": {
-		"lexeme": "range",
+		"lexeme": "Range",
 		"precedence": 1
 	},
 	"Return": {

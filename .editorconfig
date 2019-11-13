@@ -15,3 +15,6 @@ indent_size = 4
 
 [*.m4]
 insert_final_newline = false
+
+[*.x.start]
+trim_trailing_whitespace = false

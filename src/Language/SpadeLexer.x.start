@@ -23,9 +23,9 @@ $num = [0-9]
 $alphaNum = [$alpha$num]
 @newline = \r\n | \r | \n
 
-@tabs = \t+
-@spaces = \ +
-@whitespace = @tabs | @spaces
+@tab = \t
+@space = \ 
+@whitespace = @tab | @space
 
 @ident = $alpha $alphaNum*
 @int = $num+
@@ -35,20 +35,21 @@ $stringchar = [^\n"]
 @string = \'$stringchar*\'
 @commandPart = [^\s\n]+
 
-@partSeparator = (";" @newline*) | (@newline+)
-@blockStarter = "{" @newline*
-@blockSeparator = "}" @newline*
+@blankLine = @newline @whitespace*
 
-@lineComment = \-\- .* (@newline @whitespace?)+
-@ignoredWhitespace = \\ @newline @whitespace*
+@partSeparator = (";" @blankLine*) | (@blankLine+)
+@blockStarter = @blankLine* "{" @blankLine*
+@blockSeparator = @blankLine* "}" @blankLine*
+
+@lineComment = \-\- .* @blankLine+
+@ignoredWhitespace = \\ @blankLine+
 
 :-
 
 -- Things to ignore
-@spaces             ;
-@tabs+              ;
+@space              ;
+@tab+               ;
 @lineComment        ;
 @ignoredWhitespace  ;
 
 -- Whitespace
-\n                  ;

@@ -1,5 +1,5 @@
 {-|
-Module      : Main
+Modu§e      : Main
 Description : Entry-point for dig, compiler for Spade
 Copyright   : (c) Josh Findon and Edward Jones, 2019
 License     : MIT
@@ -11,13 +11,14 @@ Language    : Haskell2010
 This module provides a CLI for dig.
 -}
 
-import           Generator.Generator         (generate)
+-- import           Generator.Generator         (generate)
 import           Language.SpadeParserWrapper (parseString)
 -- import           Optimiser.Optimiser         (optimise)
+import           Language.AST                (AST)
 import           Results.Results             (Errors, Result (..))
 import           System.Exit                 (exitFailure)
 import           System.IO                   (hPrint, stderr)
-import           TypeChecker.TypeChecker     (checkTypes)
+-- import           TypeChecker.TypeChecker     (checkTypes)
 
 main :: IO ()
 main = do
@@ -27,33 +28,18 @@ main = do
         else
             readFile "asdf.sp"
 
-    -- Compile the code
-    rs <- compile c
-
     -- Output
-    case rs of
-        Pass fs -> if True then
+    case compile c of
+        Pass fs -> --if True then
                 print fs
-            else
-                writeFile "asdf.mcfunction" $ show fs
+        --     else
+        --         writeFile "asdf.mcfunction" $ show fs
         Fail es -> do
             printErrors es
             exitFailure
 
-compile :: String -> IO (Result [(FilePath,String)])
-compile s = do
-    -- parsed <- parse s
-    let parsed = parseString s
-    -- do
-    --     checkTypes
-    --     return . optimise
-    --     return . generate
-    -- parsed :: Result AST
-    -- checkTypes :: AST -> Result AST
-    let typed = parsed >>= checkTypes
-    -- Add the preprocessor
-    -- optimise
-    return (typed >>= generate)
+compile :: String -> Result AST
+compile s = parseString s -- >>= checkTypes >>= generate
 
 printErrors :: Errors -> IO ()
 printErrors [] = return ()

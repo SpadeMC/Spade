@@ -23,7 +23,6 @@ import Language.Position (GetPos, getPos)
 }
 
 %name parseSpade ast
-%name parseREPL moduleItem
 
 %error { parseError }
 %lexer { lexWrap } { TEoF }
@@ -108,7 +107,7 @@ import Language.Position (GetPos, getPos)
 ast :: {AST}
 ast : moduleItems   { AST $1 }
 
-list1(moduleItems, ModuleItem, moduleItem, "\n")
+listNoSep1(moduleItems, ModuleItem, moduleItem)
 
 moduleItem :: {ModuleItem}
 moduleItem : functionDef    { FunctionItem $1 (getPos $1) }
@@ -161,7 +160,7 @@ bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
 
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
-         | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
+		 | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
          | "/" command            { CommandC (Command $2 (Unknown UnknownM) (getPos $1)) }
          | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1))) (getPos $1)) }
          | "return"               { Return Nothing (getPos $1) }
