@@ -6,9 +6,8 @@ Ever wanted to do something crazy with command blocks but the notation seemed to
 Ever wanted to make an adventure map which reacts to events?
 Ever wanted to write code which uses both Minecraft commands and a server plugin?
 
-If so, Spade may help.
-Spade is an approachable programming language which can compile down to both mcfunctions, and Java!
-It makes it much easier to take total and unquestionable command of all parts of your Minecraft world.
+If so, Spade may help!
+Spade is an approachable programming language which can compile down to both mcfunctions, and Java, making it much easier to take total and unquestionable command of all parts of your Minecraft world.
 
 ## Features
 
@@ -16,7 +15,7 @@ It makes it much easier to take total and unquestionable command of all parts of
 - Syntactic sugaring to allow useful tasks to be used by the programmer with minimal effort
 - A strict type-system to catch errors before runtime and _without_ affecting efficiency (better than Java)
 - A single language which can be run both on the server and client sides
-- The compiler can run on any common operating system (Windows, MacOS and Linux)
+- A compiler that can run on any common operating system (Windows, MacOS and Linux)
 
 ## Installation
 
@@ -24,7 +23,7 @@ It makes it much easier to take total and unquestionable command of all parts of
 
 We maintain [installers][releases] for Windows, MacOS and Linux on our releases page.
 
-### Built from Scratch (_Hard, just for development_)
+### Build from Scratch (_Hard, just for development_)
 
 If you'd like to build directly from the source code, you will need a number of smaller tools.
 Whip up the terminal, and make sure the following are installed:
