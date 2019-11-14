@@ -13,7 +13,7 @@ Spade is an approachable programming language which can compile down to both mcf
 
 - A simple, unified syntax with similarities to other common languages
 - Syntactic sugaring to allow useful tasks to be used by the programmer with minimal effort
-- A strict type-system to catch errors before runtime and _without_ affecting efficiency (better than Java)
+- A strict type-system to catch errors before runtime and _without_ affecting performance (better than Java)
 - A single language which can be run both on the server and client sides
 - A compiler that can run on any common operating system (Windows, MacOS and Linux)
 
