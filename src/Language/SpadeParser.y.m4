@@ -90,6 +90,8 @@ import Language.Position (GetPos, getPos)
     "*"             { TTimes                p }
     "%"             { TModulo               p }
 
+%nonassoc IF
+%nonassoc "else"
 %left CALL
 %left "|"
 %left "&"
@@ -101,7 +103,6 @@ import Language.Position (GetPos, getPos)
 %right NEG "!"
 %right "$"
 %nonassoc "{" "[" "(" INT REAL CHAR BOOL IDENT STRING
-
 %%
 
 ast :: {AST}
@@ -136,7 +137,7 @@ event :: {Event}
 event : expr { Event $1 (getPos $1) }
 
 condBlocks :: {[CondBlock]}
-condBlocks : condBlock                        { [$1] }
+condBlocks : condBlock %prec IF               { [$1] }
            | condBlock "else" "if" condBlocks { $1 : $4 }
 
 condBlock :: {CondBlock}
@@ -151,16 +152,12 @@ list(bodyBlocks, BodyBlock, bodyBlock, "\n")
 
 bodyBlock :: {BodyBlock}
 bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
-          | "if" condBlocks maybeElseBlock            { If $2 $3 (getPos $1) }
+          | "if" condBlocks %prec IF 				  { If $2 Nothing (getPos $1) }
+          | "if" condBlocks "else" "{" bodyBlocks "}" { If $2 (Just $5) (getPos $1) }
           | "while" expr "{" bodyBlocks "}"           { While $2 $4 (getPos $1) }
           | "for" IDENT "in" expr "{" bodyBlocks "}"  { For (Ident (identifierVal $2) (getPos $2)) $4 $6 (getPos $1) }
           | "repeat" expr "{" bodyBlocks "}"          { Repeat $2 $4 (getPos $1) }
-		  | "case" expr "{" switchCases "}"           { Switch $2 $4 (getPos $1) }
-
-maybe(maybeElseBlock, Else, elseBlock)
-
-elseBlock :: {Else}
-elseBlock : "else" "{" bodyBlocks "}" { $3 }
+          | "case" expr "{" switchCases "}"           { Switch $2 $4 (getPos $1) }
 
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }

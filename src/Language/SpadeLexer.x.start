@@ -18,9 +18,10 @@ module Language.SpadeLexer (Alex, AlexPosn(..), Token(..), lexWrap, alexError, r
 
 %wrapper "monad"
 
-$alpha = [A-Za-z]
+$alpha = [A-Za-z_]
 $num = [0-9]
 $alphaNum = [$alpha$num]
+@separatedNum = [0-9]([0-9_]*[0-9])?
 @newline = \r\n | \r | \n
 
 @tab = \t
@@ -28,8 +29,8 @@ $alphaNum = [$alpha$num]
 @whitespace = @tab | @space
 
 @ident = $alpha $alphaNum*
-@int = $num+
-@real = $num+ \. $num+
+@int = @separatedNum+
+@real = @separatedNum+ \. @separatedNum+
 @bool = (true) | (false)
 $stringchar = [^\n']
 @string = \'$stringchar*\'

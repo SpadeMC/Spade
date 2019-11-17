@@ -1,7 +1,7 @@
 {
 	"Integer": {
 		"lexeme": "@int",
-		"tokenValue": "((read t) :: Integer)",
+		"tokenValue": "((read (filter (/='_') t)) :: Integer)",
 		"comment": "An integral literal",
 		"extraFields": "intVal :: Integer",
 		"showExtraFields": "c",
@@ -17,7 +17,7 @@
 	},
 	"Real": {
 		"lexeme": "@real",
-		"tokenValue": "((read t) :: Double)",
+		"tokenValue": "((read (filter (/='_') t)) :: Double)",
 		"comment": "A real/floating-point literal",
 		"extraFields": "realVal :: Double",
 		"showExtraFields": "r",
