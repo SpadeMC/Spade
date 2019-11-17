@@ -76,13 +76,13 @@ Case statements let you perform different actions based on the value of one expr
 
 ```
 case x {
-	0: {
+	0 {
 		say('x is 0')
 	}
-	1: {
+	1 {
 		say('x is 1')
 	}
-	default: {
+	default {
 		say('x is not 0 or 1')
 	}
 }
