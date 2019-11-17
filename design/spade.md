@@ -168,8 +168,16 @@ m = {
 ## NBT Moves
 
 ```
--- WIP
-some.path.here[0] <- {
+"some.path.here[0]" <- {
+	some: 'asdf'
+}
+```
+
+Equivalently:
+
+```
+i = 0
+"some.path.here[${i}]" <- {
 	some: 'asdf'
 }
 ```
