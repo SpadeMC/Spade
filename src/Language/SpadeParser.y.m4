@@ -91,7 +91,6 @@ import Language.Position (GetPos, getPos)
     "%"             { TModulo               p }
 
 %left CALL
-%right "->"
 %left "|"
 %left "&"
 %left "==" "!="
@@ -99,7 +98,7 @@ import Language.Position (GetPos, getPos)
 %left "+" "-"
 %left "*" "/" "%"
 %right NEG "!"
-%right "$" "~"
+%right "$"
 %nonassoc "{" "[" "(" INT REAL CHAR BOOL IDENT STRING
 
 %%
@@ -161,6 +160,7 @@ bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
 		 | expr "<-" expr         { NBTMoveC (NBTMove $1 $3 (getPos $1)) }
+		 | expr "><" expr         { SwapC $1 $3 (getPos $1) }
          | "/" command            { CommandC (Command $2 (Unknown UnknownM) (getPos $1)) }
          | IDENT "(" exprList ")" { CallC (Call (Ident (identifierVal $1) (getPos $1)) $3 (Unknown (getPurity (identifierVal $1))) (getPos $1)) }
          | "return"               { Return Nothing (getPos $1) }
@@ -177,7 +177,7 @@ exprMapPart : expr ":" expr { ($1, $3) }
 
 expr :: {Expr}
 expr : value                   { Value $1 (Unknown UnknownM) (getPos $1) }
-     | "-" expr                { Neg $2 (Unknown UnknownM) (getPos $1) }
+     | "-" expr %prec NEG      { Neg $2 (Unknown UnknownM) (getPos $1) }
      | expr "+" expr           { Add $1 $3 (Unknown UnknownM) (getPos $1) }
      | expr "-" expr           { Subtract $1 $3 (Unknown UnknownM) (getPos $1) }
      | expr "*" expr           { Multiply $1 $3 (Unknown UnknownM) (getPos $1) }

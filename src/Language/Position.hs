@@ -63,6 +63,7 @@ instance GetPos SwitchCase where
 instance GetPos BodyLine where
     getPos (AssignmentC a) = getPos a
     getPos (NBTMoveC m)    = getPos m
+    getPos (SwapC _ _ p)   = p
     getPos (CommandC c)    = getPos c
     getPos (CallC c)       = getPos c
     getPos (Return _ p)    = p

@@ -76,6 +76,7 @@ data SwitchCase =
 data BodyLine
     = AssignmentC Assignment
     | NBTMoveC NBTMove
+    | SwapC Expr Expr AlexPosn
     | CommandC Command
     | CallC Call
     | Return (Maybe Expr) AlexPosn

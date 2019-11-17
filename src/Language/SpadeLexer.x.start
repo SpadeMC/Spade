@@ -31,7 +31,7 @@ $alphaNum = [$alpha$num]
 @int = $num+
 @real = $num+ \. $num+
 @bool = (true) | (false)
-$stringchar = [^\n"]
+$stringchar = [^\n']
 @string = \'$stringchar*\'
 @commandPart = [^\s\n]+
 
