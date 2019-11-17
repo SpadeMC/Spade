@@ -95,6 +95,7 @@ import Language.Position (GetPos, getPos)
 %left "&"
 %left "==" "!="
 %left "<" "<=" ">" ">="
+%left "\\/" "/\\"
 %left "+" "-"
 %left "*" "/" "%"
 %right NEG "!"
@@ -144,18 +145,22 @@ condBlock : expr bodyBlocks { ($1, $2) }
 list1(switchCases, SwitchCase, switchCase, "\n")
 
 switchCase :: {SwitchCase}
-switchCase : expr ":" "{" bodyBlocks "}" { SwitchCase $1 $4 (getPos $1) }
+switchCase : expr "{" bodyBlocks "}" { SwitchCase $1 $3 (getPos $1) }
 
 list(bodyBlocks, BodyBlock, bodyBlock, "\n")
 
 bodyBlock :: {BodyBlock}
 bodyBlock : bodyLine                                  { Line $1 (getPos $1) }
-          | "if" condBlocks                           { If $2 Nothing (getPos $1) }
-          | "if" condBlocks "else" "{" bodyBlocks "}" { If $2 (Just $5) (getPos $1) }
+          | "if" condBlocks maybeElseBlock            { If $2 $3 (getPos $1) }
           | "while" expr "{" bodyBlocks "}"           { While $2 $4 (getPos $1) }
           | "for" IDENT "in" expr "{" bodyBlocks "}"  { For (Ident (identifierVal $2) (getPos $2)) $4 $6 (getPos $1) }
           | "repeat" expr "{" bodyBlocks "}"          { Repeat $2 $4 (getPos $1) }
-          | "case" expr "{" switchCases "}"           { Switch $2 $4 (getPos $1) }
+		  | "case" expr "{" switchCases "}"           { Switch $2 $4 (getPos $1) }
+
+maybe(maybeElseBlock, Else, elseBlock)
+
+elseBlock :: {Else}
+elseBlock : "else" "{" bodyBlocks "}" { $3 }
 
 bodyLine :: {BodyLine}
 bodyLine : IDENT "=" expr         { AssignmentC (Assignment (Ident (identifierVal $1) (getPos $1)) $3 (getPos $1)) }
