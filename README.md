@@ -34,6 +34,9 @@ Whip up the terminal, and make sure the following are installed:
 - [`alex`][alex] Haskell lexical analyser generator
 - [`happy`][happy] Haskell parser generator
 - [`m4`][m4] GNU macro language
+- [`stylish-haskell`][formatter] Haskell code formatter
+- [`hlint`][hlint] Haskell linter
+- [`refactor`][refactor] Haskell linter auto fixing
 
 Then, download our code and compile it:
 
@@ -77,3 +80,6 @@ _We are not affiliated with Mojang AB._
 [alex]: https://www.haskell.org/alex/
 [happy]: https://www.haskell.org/happy/
 [m4]: https://www.gnu.org/software/m4/
+[formatter]: https://github.com/jaspervdj/stylish-haskell
+[hlint]: https://github.com/ndmitchell/hlint
+[refactor]: https://github.com/mpickering/apply-refact
