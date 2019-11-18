@@ -11,6 +11,8 @@ Language    : Haskell2010
 This module provides a CLI for dig.
 -}
 
+module Main (main) where
+
 import           ConstantProcessor.ConstantProcessor (processConstants)
 import           Generator.Generator                 (generate)
 import           Language.SpadeParserWrapper         (parseString)
