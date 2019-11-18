@@ -111,6 +111,8 @@ data Expr
     | Not Expr SpadeType AlexPosn
     | And Expr Expr SpadeType AlexPosn
     | Or Expr Expr SpadeType AlexPosn
+    | MemberOf Expr Ident SpadeType AlexPosn
+    | Subscript Expr Expr SpadeType AlexPosn
     | List [Expr] SpadeType AlexPosn
     | Map [(Expr, Expr)] SpadeType AlexPosn
     | Range RangeDef

@@ -93,6 +93,8 @@ instance GetPos Expr where
     getPos (Not _ _ p)              = p
     getPos (And _ _ _ p)            = p
     getPos (Or _ _ _ p)             = p
+    getPos (MemberOf _ _ _ p)       = p
+    getPos (Subscript _ _ _ p)      = p
     getPos (List _ _ p)             = p
     getPos (Map _ _ p)              = p
     getPos (Range d)                = getPos d

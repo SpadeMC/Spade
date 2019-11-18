@@ -11,14 +11,15 @@ Language    : Haskell2010
 This module provides a CLI for dig.
 -}
 
--- import           Generator.Generator         (generate)
-import           Language.SpadeParserWrapper (parseString)
--- import           Optimiser.Optimiser         (optimise)
-import           Language.AST                (AST)
-import           Results.Results             (Errors, Result (..))
-import           System.Exit                 (exitFailure)
-import           System.IO                   (hPrint, stderr)
--- import           TypeChecker.TypeChecker     (checkTypes)
+import           ConstantProcessor.ConstantProcessor (processConstants)
+import           Generator.Generator                 (generate)
+import           Language.SpadeParserWrapper         (parseString)
+import           Optimiser.Optimiser                 (optimise)
+import           Results.Results                     (Errors, Result (..))
+import           ScopeResolver.ScopeResolver         (resolveScope)
+import           System.Exit                         (exitFailure)
+import           System.IO                           (hPrint, stderr)
+import           TypeChecker.TypeChecker             (checkTypes)
 
 main :: IO ()
 main = do
@@ -38,8 +39,8 @@ main = do
             printErrors es
             exitFailure
 
-compile :: String -> Result AST
-compile s = parseString s -- >>= checkTypes >>= generate
+compile :: String -> Result [(FilePath,String)]
+compile s = parseString s >>= resolveScope >>= checkTypes >>= processConstants >>= optimise >>= generate
 
 printErrors :: Errors -> IO ()
 printErrors [] = return ()

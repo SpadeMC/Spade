@@ -172,6 +172,14 @@
 		"lexeme": ">",
 		"precedence": 3
 	},
+	"MapTypeStart": {
+		"lexeme": "{|",
+		"precedence": 4
+	},
+	"MapTypeEnd": {
+		"lexeme": "|}",
+		"precedence": 3
+	},
 	"SeqStart": {
 		"lexeme": "|>"
 	},
