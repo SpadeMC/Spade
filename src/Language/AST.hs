@@ -1,4 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 {-|
 Module      : AST
@@ -13,16 +14,38 @@ Language    : Haskell2010
 This module defines the data-types used to form the abstract syntax tree of the
 spade language.
 -}
-module Language.AST where
+module Language.AST (AST(..)
+    , ModuleItem(..)
+    , FunctionDef(..)
+    , FunctionSignature(..)
+    , FunctionBodyBlock(..)
+    , Sequence(..)
+    , Event(..)
+    , BodyBlock(..)
+    , CondBlock
+    , Else
+    , SwitchCase(..)
+    , BodyLine(..)
+    , Assignment(..)
+    , Command(..)
+    , Expr(..)
+    , RangeDef(..)
+    , Value(..)
+    , Call(..)
+    , Ident(..)
+    , NBTMove(..)
+    , SpadeType(..)
+    , Modifier(..)
+    ) where
 
 import           Data.Int
 import           Language.SpadeLexer (AlexPosn (..))
 -- import Types.Results (SpadeType(..), Purity(..))
 
 -- | Data type to represent the abstract syntax tree for a single module. This is specified by its name, its imports and its code.
-data AST =
+newtype AST =
     AST [ModuleItem]
-    deriving (Show)
+    deriving newtype (Show)
 
 -- | Describes a single named item in the module
 data ModuleItem = FunctionItem FunctionDef AlexPosn

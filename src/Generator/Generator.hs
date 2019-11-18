@@ -1,4 +1,4 @@
-module Generator.Generator where
+module Generator.Generator (generate) where
 
 import           Language.AST                (AST)
 import           Results.Results             (Result (..))
