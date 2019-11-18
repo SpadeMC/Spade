@@ -30,7 +30,8 @@ build: ./spade ## Build everything, explicitly
 .PHONY: build
 
 ./spade: $(SOURCE_FILES)
-	stack install --local-bin-path .
+	stack build
+	stack install --local-bin-path . 2>/dev/null
 
 ./src/Language/SpadeLexer.hs: ./src/Language/SpadeLexer.x ./src/Language/SpadeLexer.hs.patch
 	$(LEXER_GENERATOR) $(LEXER_GENERATOR_FLAGS) $< -o $@
