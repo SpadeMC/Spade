@@ -15,6 +15,7 @@ PARSER_GENERATOR_FLAGS := -ga $(PARSER_DEBUG_FLAGS) -m spadeParser
 # Code up-keep commands
 LINTER := hlint
 LINTER_FLAGS := -s
+LINTER_FIX_FLAGS := $(LINTER_FLAGS) --refactor --refactor-options -i
 FORMATTER := stylish-haskell
 FORMATTER_FLAGS := -i
 
@@ -81,6 +82,12 @@ format: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v L
 lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the linter on all non-generated source files
 	$(LINTER) $(LINTER_FLAGS) $^
 .PHONY: lint
+
+lint-fix: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the linter on all non-generated source files
+	for f in $^; do \
+		$(LINTER) $(LINTER_FIX_FLAGS) "$$f"; \
+	done
+.PHONY: lint-fix
 
 doc: dist/doc/html/spade/spade/index.html ## Make the documentation
 .PHONY: doc
