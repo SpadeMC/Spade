@@ -64,7 +64,7 @@ One (custom) version of `spade`.
 
 ### License
 
-Spade and Dig are developed under the MIT license.
+Spade is developed under the MIT license.
 
 ### Authors
 
