@@ -41,18 +41,18 @@ Whip up the terminal, and make sure the following are installed:
 Then, download our code and compile it:
 
 ```bash
-git clone https://github.com/jf908/spade
-cd spade
+git clone https://github.com/SpadeMC/Spade
+cd Spade
 make
 ```
 
 Once this succeeds, the compiler can be run:
 
 ```bash
-./dig
+./spade
 ```
 
-Use `./dig --help` to get more help.
+Use `./spade --help` to get more help.
 
 To install, run:
 ```bash
@@ -60,11 +60,11 @@ make install
 ```
 
 Et voilà!
-One (custom) version of `dig`.
+One (custom) version of `spade`.
 
 ### License
 
-Spade and Dig are developed under the MIT license.
+Spade is developed under the MIT license.
 
 ### Authors
 

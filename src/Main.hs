@@ -1,6 +1,6 @@
 {-|
 Modu§e      : Main
-Description : Entry-point for dig, compiler for Spade
+Description : Entry-point for spade
 Copyright   : (c) Josh Findon and Edward Jones, 2019
 License     : MIT
 Maintainer  : Josh Findon and Edward Jones
@@ -8,7 +8,7 @@ Stability   : experimental
 Portability : POSIX + Windows
 Language    : Haskell2010
 
-This module provides a CLI for dig.
+This module provides a CLI for spade.
 -}
 
 module Main (main) where
