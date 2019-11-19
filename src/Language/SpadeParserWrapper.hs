@@ -20,7 +20,8 @@ module Language.SpadeParserWrapper
 import           Language.AST         (AST)
 import           Language.SpadeLexer  (AlexPosn (AlexPn), runAlex)
 import           Language.SpadeParser (parseSpade)
-import           Results.Results      (Error (..), Result (..))
+import           Results.LogMsg       (LogMsg (..), Severity (..))
+import           Results.Results      (Result (..))
 
 -- | Parse a file of "-" for @stdin@
 parse :: FilePath -> IO (Result AST)
@@ -30,8 +31,8 @@ parse f   = parseString <$> readFile f
 -- | Parse a given string
 parseString :: String -> Result AST
 parseString s = case runAlex s parseSpade of
-    Right x -> Pass x
-    Left m  -> Fail [Error { message = m, locationInfo = loc }]
+    Right x -> pure x
+    Left m  -> Fail [LogMsg { severity = Error, message = m, locationInfo = Just loc }]
         -- TODO: Get real location
         -- where loc = AlexPn 0 (read . takeWhile (/= ':') $ m) (read . dropWhile (/= ':') . tail . takeWhile (/= ':') $ m)
         where loc = AlexPn 0 0 0

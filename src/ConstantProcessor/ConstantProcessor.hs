@@ -5,4 +5,4 @@ import           Results.Results             (Result (..))
 import           ScopeResolver.ScopeResolver (SymTable)
 
 processConstants :: (SymTable,AST) -> Result (SymTable,AST)
-processConstants = Pass
+processConstants = pure

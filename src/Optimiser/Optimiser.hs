@@ -5,4 +5,4 @@ import           Results.Results             (Result (..))
 import           ScopeResolver.ScopeResolver (SymTable)
 
 optimise :: (SymTable,AST) -> Result (SymTable,AST)
-optimise = Pass
+optimise = pure

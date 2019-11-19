@@ -5,4 +5,4 @@ import           Results.Results             (Result (..))
 import           ScopeResolver.ScopeResolver (SymTable)
 
 generate :: (SymTable,AST) -> Result [(FilePath,String)]
-generate = const $ Fail []
+generate = const $ Pass [] []

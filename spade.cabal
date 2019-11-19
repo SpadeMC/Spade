@@ -73,7 +73,7 @@ executable spade
                  , Language.SpadeParserWrapper
                  , Optimiser.Optimiser
                  , ScopeResolver.ScopeResolver
-                 , Results.Errors
+                 , Results.LogMsg
                  , Results.Results
                  , TypeChecker.TypeChecker
 
