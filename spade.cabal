@@ -71,6 +71,7 @@ executable spade
                  , Language.SpadeLexer
                  , Language.SpadeParser
                  , Language.SpadeParserWrapper
+                 , Minecraft.NBT
                  , Optimiser.Optimiser
                  , ScopeResolver.ScopeResolver
                  , Results.LogMsg
