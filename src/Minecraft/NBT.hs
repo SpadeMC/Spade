@@ -32,8 +32,8 @@ instance Show NBT where
   show (NBTDouble d)     = show d ++ "d"
   show (NBTByteArray []) = "[B;]"
   show (NBTString s)     = show s
-  show (NBTByteArray xs) = "[B;" ++ intercalate "," ((show . NBTByte) <$> xs) ++  "]"
+  show (NBTByteArray xs) = "[B;" ++ intercalate "," (show . NBTByte <$> xs) ++  "]"
   show (NBTList xs)      = "[" ++ intercalate "," (show <$> xs) ++ "]"
   show (NBTCompound m)   = "{" ++ intercalate "," (foldrWithKey (\k v acc -> (k ++ ":"  ++ show v) : acc) [] m) ++ "}"
-  show (NBTIntArray xs)  = "[I;" ++ intercalate "," ((show . NBTInt) <$> xs) ++  "]"
-  show (NBTLongArray xs) = "[L;" ++ intercalate "," ((show . NBTLong) <$> xs) ++  "]"
+  show (NBTIntArray xs)  = "[I;" ++ intercalate "," (show . NBTInt <$> xs) ++  "]"
+  show (NBTLongArray xs) = "[L;" ++ intercalate "," (show . NBTLong <$> xs) ++  "]"
