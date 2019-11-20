@@ -30,9 +30,8 @@ instance Show NBT where
   show (NBTLong l)       = show l ++ "l"
   show (NBTFloat f)      = show f ++ "f"
   show (NBTDouble d)     = show d ++ "d"
-  show (NBTByteArray []) = "[B;]"
-  show (NBTString s)     = show s
   show (NBTByteArray xs) = "[B;" ++ intercalate "," (show . NBTByte <$> xs) ++  "]"
+  show (NBTString s)     = show s
   show (NBTList xs)      = "[" ++ intercalate "," (show <$> xs) ++ "]"
   show (NBTCompound m)   = "{" ++ intercalate "," (foldrWithKey (\k v acc -> (k ++ ":"  ++ show v) : acc) [] m) ++ "}"
   show (NBTIntArray xs)  = "[I;" ++ intercalate "," (show . NBTInt <$> xs) ++  "]"
