@@ -41,7 +41,7 @@ Whip up the terminal, and make sure the following are installed:
 Then, download our code and compile it:
 
 ```bash
-git clone https://github.com/SpadeMC/Spade
+git clone --recurse-submodules https://github.com/SpadeMC/Spade
 cd Spade
 make
 ```
