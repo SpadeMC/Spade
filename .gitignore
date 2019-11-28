@@ -5,6 +5,7 @@
 spade
 
 # Haskell
+Args.hs
 stack.yaml.lock
 dist
 dist-*
