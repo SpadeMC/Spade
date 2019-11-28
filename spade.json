@@ -58,6 +58,24 @@
 			"type": "flag",
 			"help": "Disable ANSI-coloured output",
 			"default": "false"
+		},
+		{
+			"short": "-i",
+			"long": "--input",
+			"dest": "inputFile",
+			"type": "string",
+			"default": "-",
+			"help": "Specifies the main spade file to read, or '-' for standard input",
+			"metaDest": "file"
+		},
+		{
+			"short": "-o",
+			"long": "--output",
+			"dest": "outputFile",
+			"type": "string",
+			"default": "-",
+			"help": "Specifies the output location, or '-' for standard output",
+			"metaDest": "file"
 		}
 	]
 }
