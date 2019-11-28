@@ -1,10 +1,11 @@
 module ScopeResolver.ScopeResolver (resolveScope, SymTable) where
 
+import           Args            (Args)
 import           Data.Map.Lazy   (Map, empty)
 import           Language.AST    (AST, Ident)
 import           Results.Results (Result (..))
 
 type SymTable = Map Ident Int
 
-resolveScope :: AST -> Result (SymTable,AST)
-resolveScope a = pure (empty, a)
+resolveScope :: Args -> AST -> Result (SymTable,AST)
+resolveScope _ a = pure (empty, a)

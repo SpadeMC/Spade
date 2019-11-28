@@ -13,6 +13,8 @@ This module provides a CLI for spade.
 
 module Main (main) where
 
+import           Args                                (Args, inputFile,
+                                                      outputFile, parseArgv)
 import           ConstantProcessor.ConstantProcessor (processConstants)
 import           Generator.Generator                 (generate)
 import           Language.SpadeParserWrapper         (parseString)
@@ -25,39 +27,27 @@ import           TypeChecker.TypeChecker             (checkTypes)
 
 main :: IO ()
 main = do
+    -- Parse the commandline arguments
+    a <- parseArgv
+    print a
+
     -- Fetch the input
-    c <- if True then
+    c <- if inputFile a == "-" then
             getContents
         else
-            readFile "asdf.sp"
+            readFile $ inputFile a
 
-    -- Output
-    case compile c of
+    -- Compile and output
+    case compile a c of
         Pass fs ls -> do
             printLogMsgs ls
-            print fs
-                -- writeFile "asdf.mcfunction" $ show fs
+            if outputFile a == "-" then
+                print fs
+            else
+                writeFile (outputFile a) $ show fs
         Fail es -> do
             printLogMsgs es
             exitFailure
 
-compile :: String -> Result [(FilePath,String)]
-compile s = parseString s >>= resolveScope >>= checkTypes >>= processConstants >>= optimise >>= generate
-
-
-
--- printCompilerMsgs :: [CompilerMsg] -> IO ()
--- printCompilerMsgs [] = return ()
--- printCompilerMsgs (e:es) = do
---     hPrint stderr e
---     printErrors es
-
--- printCompilerMsgs :: Result a -> IO ()
--- printCompilerMsgs (Pass _ ws)  = sequence_ $ printWarning <$> ws
--- printCompilerMsgs (Fail es ws) = sequence_ $ printWarning <$> ws >>= sequence_ $ printWarning <$> es
-
--- printWarning :: Warning -> IO ()
--- printWarning w = print $ "Warning: " ++ w
-
--- printError :: Error -> IO ()
--- printError e = print $ "Error: " ++ e
+compile :: Args -> String -> Result [(FilePath,String)]
+compile a s = parseString a s >>= resolveScope a >>= checkTypes a >>= processConstants a >>= optimise a >>= generate a

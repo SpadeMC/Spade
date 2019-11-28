@@ -22,7 +22,7 @@ FORMATTER_FLAGS := -i
 .DEFAULT_GOAL := all
 
 # All required source files (existent or otherwise)
-SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./src/Language/SpadeLexer.hs ./src/Language/SpadeParser.hs
+SOURCE_FILES = $(shell find . -name '*.hs' | grep -v .stack-work) ./src/Language/SpadeLexer.hs ./src/Language/SpadeParser.hs ./src/Args.hs
 
 all: build ## Build everything
 .PHONY: all
@@ -57,8 +57,11 @@ build: ./spade ## Build everything, explicitly
 
 ./src/Language/MCFunctionParser.y.m4: ./src/Language/m4/defs.m4
 
-./Args.hs: spade.json
-	arggen_haskell < $^ > $@
+./src/Args.hs: spade.json ./deps/arggen/arggen
+	./deps/arggen/arggen < $< > $@
+
+./deps/arggen/arggen: $(shell find ./deps/arggen/ -name '*.hs')
+	make -C ./deps/arggen/
 
 %.hs:;
 
@@ -97,8 +100,9 @@ dist/doc/html/spade/spade/index.html: $(SOURCE_FILES)
 
 clean: ## Delete all generated files
 	make -C ./deps/alexergen/ clean
+	make -C ./deps/arggen/ clean
 	stack clean
-	$(RM) cabal.config Args.hs $(shell find . -name '*_completions.sh') ./spade ./src/Language/Spade{Lexer,Parser,ParserData}.hs ./src/Language/SpadeParser.y ./src/Language/SpadeLexer.x ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
+	$(RM) cabal.config ./src/Args.hs $(shell find . -name '*_completions.sh') ./spade ./src/Language/Spade{Lexer,Parser,ParserData}.hs ./src/Language/SpadeParser.y ./src/Language/SpadeLexer.x ./src/Language/SpadeParser.info $(shell find . -name '*.orig') $(shell find . -name '*.info') $(shell find . -name '*.hi')
 .PHONY: clean
 
 # Our thanks to François Zaninotto! https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html for helping
