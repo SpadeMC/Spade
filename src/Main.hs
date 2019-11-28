@@ -50,4 +50,9 @@ main = do
             exitFailure
 
 compile :: Args -> String -> Result [(FilePath,String)]
-compile a s = parseString a s >>= resolveScope a >>= checkTypes a >>= processConstants a >>= optimise a >>= generate a
+compile a s = parseString a s
+    >>= resolveScope a
+    >>= checkTypes a
+    >>= processConstants a
+    >>= optimise a
+    >>= generate a
