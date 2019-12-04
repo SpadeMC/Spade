@@ -152,7 +152,7 @@ data RangeDef
 
 -- | Data-structure to represent a single value
 data Value
-    = IntegerV Integer SpadeType AlexPosn
+    = IntegerV Int32 SpadeType AlexPosn
     | DoubleV Double SpadeType AlexPosn
     | StringV String SpadeType AlexPosn
     | IdentV Ident SpadeType AlexPosn
