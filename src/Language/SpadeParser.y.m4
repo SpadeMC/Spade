@@ -212,7 +212,7 @@ expr : value                   { Value $1 (Unknown UnknownM) (getPos $1) }
      | "(" expr ")"            { Brackets $2 (getPos $1) }
 
 value :: {Value}
-value : INT                  			  { IntegerV (intVal $1) (Unknown UnknownM) (getPos $1) }
+value : INT                  			  { IntegerV (fromIntegral (intVal $1)) (Unknown UnknownM) (getPos $1) }
       | REAL                 			  { DoubleV (realVal $1) (Unknown UnknownM) (getPos $1) }
       | STRING               			  { StringV (stringVal $1) (Unknown UnknownM) (getPos $1) }
       | IDENT                			  { IdentV (Ident (identifierVal $1) (getPos $1)) (Unknown UnknownM) (getPos $1) }
