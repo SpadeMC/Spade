@@ -1,0 +1,10 @@
+name: Haskell Continuous Integration
+on: pull_request
+jobs:
+	compile:
+		name: Compile source code
+		runs-on: ubuntu-latest
+		steps:
+			- name: Run make
+			  run: make
+			  id: make
