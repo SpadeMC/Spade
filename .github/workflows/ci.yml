@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2-beta
+        with:
+          submodules: recursive
       - name: Run make
         run: make
         id: make
@@ -15,6 +17,8 @@ jobs:
     needs: [compile]
     steps:
       - uses: actions/checkout@v2-beta
+        with:
+          submodules: recursive
       - name: Run hlint
         id: hlint
         run: make lint
@@ -24,6 +28,8 @@ jobs:
     needs: [compile]
     steps:
       - uses: actions/checkout@v2-beta
+        with:
+          submodules: recursive
       - name: Run stylish-haskell
         id: stylish-haskell
         run: make format
