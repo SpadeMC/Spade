@@ -5,6 +5,9 @@ jobs:
     name: Compile source code
     runs-on: ubuntu-latest
     steps:
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - uses: actions/checkout@v1
         with:
           submodules: recursive
@@ -16,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - uses: actions/checkout@v1
         with:
           submodules: recursive
@@ -27,6 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - uses: actions/checkout@v1
         with:
           submodules: recursive
