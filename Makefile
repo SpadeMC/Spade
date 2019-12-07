@@ -1,5 +1,5 @@
 #!/usr/bin/make
-SHELL := /bin/zsh
+SHELL := /bin/bash
 
 # Apply debug options if specified
 ifdef DEBUG
