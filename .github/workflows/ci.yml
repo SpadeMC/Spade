@@ -5,7 +5,7 @@ jobs:
     name: Compile source code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2-beta
+      - uses: actions/checkout@v1
         with:
           submodules: recursive
       - name: Run make
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
-      - uses: actions/checkout@v2-beta
+      - uses: actions/checkout@v1
         with:
           submodules: recursive
       - name: Run hlint
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
-      - uses: actions/checkout@v2-beta
+      - uses: actions/checkout@v1
         with:
           submodules: recursive
       - name: Run stylish-haskell
