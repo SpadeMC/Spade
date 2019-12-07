@@ -5,6 +5,7 @@ jobs:
     name: Compile source code
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2-beta
       - name: Run make
         run: make
         id: make
@@ -13,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
+      - uses: actions/checkout@v2-beta
       - name: Run hlint
         id: hlint
         run: make lint
@@ -21,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compile]
     steps:
+      - uses: actions/checkout@v2-beta
       - name: Run stylish-haskell
         id: stylish-haskell
         run: make format
