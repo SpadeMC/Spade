@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        with:
-          submodules: recursive
+      - run: git submodule init && git submodule update
+      - uses: actions/setup-haskell@v1
       - name: Run make
         run: make
         id: make
@@ -33,4 +33,4 @@ jobs:
       - name: Run stylish-haskell
         id: stylish-haskell
         run: make format
-     
+
