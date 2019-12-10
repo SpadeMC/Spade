@@ -8,8 +8,14 @@ jobs:
       - uses: actions/checkout@v1
       - name: Prepare submodules
         run: git submodule init && git submodule update
+      - uses: actions/cache@v1
+        id: cache-stack
+        with:
+          path: ~/.stack/
       - uses: actions/setup-haskell@v1
+        if: steps.cache-stack.outputs.cache-hit != 'true'
       - name: Install Alex and Happy
+        if: steps.cache-stack.outputs.cache-hit != 'true'
         run: stack install alex happy
       - name: Run make
         run: make
