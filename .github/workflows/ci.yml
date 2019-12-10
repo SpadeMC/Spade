@@ -15,12 +15,13 @@ jobs:
           key: ${{ runner.os }}-stack
       - uses: actions/setup-haskell@v1
         if: steps.cache-stack.outputs.cache-hit != 'true'
-      - run: export PATH=$PATH:~/.local/bin
       - name: Install Alex and Happy
         if: steps.cache-stack.outputs.cache-hit != 'true'
         run: stack install alex happy
       - name: Run make
-        run: make -B
+        run: |
+		  export PATH=$PATH:~/.local/bin
+		  make -B
         id: make
   lint:
     name: Run linter
