@@ -12,6 +12,7 @@ jobs:
         id: cache-stack
         with:
           path: ~/.stack/
+          key: ${{ runner.os }}-stack
       - uses: actions/setup-haskell@v1
         if: steps.cache-stack.outputs.cache-hit != 'true'
       - name: Install Alex and Happy
