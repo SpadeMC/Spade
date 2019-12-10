@@ -78,15 +78,15 @@ man: ./dist/doc/man/spade.1.gz ## Make the man page
 	(mangen | gzip --best) < $^ > $@
 .DELETE_ON_ERROR: ./dist/doc/man/spade.1.gz
 
-format: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the formatter on all non-generated source files
+format: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs | grep -v deps/) ## Run the formatter on all non-generated source files
 	$(FORMATTER) $(FORMATTER_FLAGS) $^
 .PHONY: format
 
-lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the linter on all non-generated source files
+lint: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs | grep -v deps/) ## Run the linter on all non-generated source files
 	$(LINTER) $(LINTER_FLAGS) $^
 .PHONY: lint
 
-lint-fix: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs) ## Run the linter on all non-generated source files
+lint-fix: $(shell find . -name '*.hs' | grep -v dist | grep -v Args.hs | grep -v Language/SpadeLexer.hs | grep -v Language/SpadeParser.hs | grep -v deps/) ## Run the linter on all non-generated source files
 	for f in $^; do \
 		$(LINTER) $(LINTER_FIX_FLAGS) "$$f"; \
 	done
