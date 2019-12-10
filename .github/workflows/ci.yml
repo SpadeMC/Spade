@@ -43,7 +43,9 @@ jobs:
         run: stack install hlint
       - name: Run hlint
         id: hlint
-        run: make lint
+        run: |
+          export PATH=$PATH:~/.local/bin
+          make lint
   format:
     name: Run code formatter
     runs-on: ubuntu-latest
@@ -64,5 +66,7 @@ jobs:
         run: stack install stylish-haskell
       - name: Run stylish-haskell
         id: stylish-haskell
-        run: make format
+        run: |
+          export PATH=$PATH:~/.local/bin
+          make format
 
