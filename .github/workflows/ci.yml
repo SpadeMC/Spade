@@ -20,8 +20,8 @@ jobs:
         run: stack install alex happy
       - name: Run make
         run: |
-		  export PATH=$PATH:~/.local/bin
-		  make -B
+		      export PATH=$PATH:~/.local/bin
+		      make -B
         id: make
   lint:
     name: Run linter
