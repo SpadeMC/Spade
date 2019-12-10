@@ -18,7 +18,7 @@ jobs:
         if: steps.cache-stack.outputs.cache-hit != 'true'
         run: stack install alex happy
       - name: Run make
-        run: make
+        run: make -B
         id: make
   lint:
     name: Run linter
