@@ -3,6 +3,7 @@
 
 # Executable
 spade
+!spade/
 
 # Haskell
 Args.hs

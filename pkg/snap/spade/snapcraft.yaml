@@ -1,0 +1,14 @@
+name: spade
+version: '0.0.1'
+summary: Compiler for the Spade langauge
+description: |
+  This package contains the spade compiler, which makes writing functions in Minecraft much easier.
+grade: devel
+confinement: strict
+parts:
+  spademc-spade:
+    source: https://
+    plugin: autotools
+apps:
+  spade:
+    command: stack exec spade
