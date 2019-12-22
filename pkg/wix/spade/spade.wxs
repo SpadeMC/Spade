@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='https://schemas.microsoft.com/wix/2006/wi'>
+	<Product Name='Spade 0.0.1' Manufacturer='SpadeMC' Id='Some GUID of ours' UpgradeCode='Another GUID of ours' Language='1033' Codepage='1252' Version='0.0.1'>
+		<Package Id='*' Keywords='Installer' Description='Installer for the Spade compiler' Comments='Source code for Spade can be found on github at https://github.com/SpadeMC/Spade' Manufacturer='SpadeMC' InstallerVersoin='100' Langauges='1033' Compressed='yes' SummaryCodepage='1252'>
+			<Media Id='1' Cabinet='spade-0.0.1.cab' EmbedCab='yes' DiskPrompt='CD-ROM #1' />
+			<Property Id='DiskPrompt' Value='Spade 0.0.1 Installation [1]' />
+			<Directory Id='ProgramFiles' Name='PFiles'>
+				<Directory Id='SpadeMC' Name='SpadeMC'>
+					<Directory Id='INSTALLDIR' Name='Spade'>
+						<Component Id='MainExecutable' Guid='MainExecutable'>
+							<File Id='SpadeEXE' Name='Spade.exe' DiskId='1' Source='Spade.exe' KeyPath='yes'>
+								<Shortcut Id='startmenuSpade001' Directory='ProgramMenuDir' Name='Spade' WorkingDirectory='INSTALLDIR' Icon='Spade.exe' IconIndex='0' Advertise='yes' />
+								<Shortcut Id='desktopSpade001' Directory='DesktopFolder' Name='Spade' WorkingDirectory='INSTALLDIR' Icon='Spade.exe' IconIndex='0' Advertise='yes' />
+							</File>
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Package>
+	</Product>
+</Wix>
