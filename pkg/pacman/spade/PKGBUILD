@@ -1,0 +1,12 @@
+pkgname=spade
+pkgver=0.0.1
+pkgdesc='Compiler for the Spade langauge'
+arch=('x86_64')
+url=https://github.com/SpadeMC/Spade
+license=('MIT')
+# TODO install the license
+depends=()
+provides=('spade') # will have -git and -bin?
+changelog=CHANGELOG
+source=('https://githubusercontent.com/SpadeMC/spade/$pkgname-$pkgver.tar.gz')
+
