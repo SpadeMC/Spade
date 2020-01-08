@@ -2,3 +2,5 @@
 instance Ord AlexPosn where
     (AlexPn c1 _ _ ) < (AlexPn c2 _ _) = c1 < c2
     a <= b = (a < b) || (a == b)
+
+deriving instance Generic AlexPosn

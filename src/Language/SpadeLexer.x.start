@@ -1,4 +1,6 @@
 {
+{-# LANGUAGE DeriveGeneric          #-}
+{-# LANGUAGE StandaloneDeriving     #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 {-|
 Module      : SpadeLexer
@@ -13,6 +15,8 @@ Language    : Haskell2010
 This module defines the machinery to lexically analyse the Spade language given in an input string.
 -}
 module Language.SpadeLexer (Alex, AlexPosn(..), Token(..), lexWrap, alexError, runAlex) where
+
+import GHC.Generics
 
 }
 

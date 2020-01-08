@@ -1,5 +1,7 @@
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE UndecidableInstances       #-}
 
 {-|
 Module      : AST
@@ -39,41 +41,42 @@ module Language.AST (AST(..)
     ) where
 
 import           Data.Int
+import           GHC.Generics        (Generic)
 import           Language.SpadeLexer (AlexPosn (..))
 -- import Types.Results (SpadeType(..), Purity(..))
 
 -- | Data type to represent the abstract syntax tree for a single module. This is specified by its name, its imports and its code.
 newtype AST =
     AST [ModuleItem]
-    deriving newtype (Show)
+    deriving newtype (Generic, Show)
 
 -- | Describes a single named item in the module
 data ModuleItem = FunctionItem FunctionDef AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Describes the definition of a function
 data FunctionDef =
     FunctionDef FunctionSignature [FunctionBodyBlock] AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Describes the definition of the type of a function
 data FunctionSignature =
     FunctionSignature Ident [(Ident, SpadeType, AlexPosn)] (SpadeType,AlexPosn) AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Describes the definition of blocks or sequences
 data FunctionBodyBlock
     = SequenceBody [Sequence] AlexPosn
     | BodyBody BodyBlock AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Describes the definition of a sequence of events
 data Sequence
     = Sequence Event [BodyBlock] AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 data Event = Event Expr AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Represents a single construction in the body of a function. This may be a
 -- further construct or just a single line
@@ -84,7 +87,7 @@ data BodyBlock
     | For Ident Expr [BodyBlock] AlexPosn -- ^ A for-loop
     | Repeat Expr [BodyBlock] AlexPosn -- ^ A repeat-loop
     | Switch Expr [SwitchCase] AlexPosn -- ^ A switch-case statement
-    deriving (Show)
+    deriving (Generic, Show)
 
 type CondBlock = (Expr, [BodyBlock])
 
@@ -93,7 +96,7 @@ type Else = [BodyBlock]
 -- | Data-struecture for the switch-case statement
 data SwitchCase =
     SwitchCase Expr [BodyBlock] AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Data-structure for a single body-line
 data BodyLine
@@ -103,16 +106,16 @@ data BodyLine
     | CommandC Command
     | CallC Call
     | Return (Maybe Expr) AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Data-structure to represent an assignment statement
 data Assignment =
     Assignment Ident Expr AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 data Command =
     Command [Either String Expr] SpadeType AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Data-structure to represent an expression
 data Expr
@@ -142,13 +145,13 @@ data Expr
     | ListCont Expr Expr SpadeType AlexPosn
     | TypeCast Expr SpadeType AlexPosn
     | Brackets Expr AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 data RangeDef
     = ClosedRange Expr Expr SpadeType AlexPosn
     | LeftOpenRange Expr SpadeType AlexPosn
     | RightOpenRange Expr SpadeType AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Data-structure to represent a single value
 data Value
@@ -162,22 +165,22 @@ data Value
     | ShortV Int16 SpadeType AlexPosn
     | LongV Int64 SpadeType AlexPosn
     | FloatV Float SpadeType AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Represents the use of a function
 data Call =
     Call Ident [Expr] SpadeType AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 -- | Data-structure to represent an identifier
 data Ident =
     Ident String AlexPosn
-    deriving (Eq, Ord, Show)
+    deriving (Generic, Eq, Ord, Show)
 
 -- | NBT Move operation
 data NBTMove =
     NBTMove Expr Expr AlexPosn
-    deriving (Show)
+    deriving (Generic, Show)
 
 data SpadeType
     = Unknown Modifier
@@ -194,11 +197,11 @@ data SpadeType
     | ListT SpadeType Modifier
     | MapT [(String,SpadeType)] Modifier
     | Function [SpadeType] SpadeType
-    deriving (Show)
+    deriving (Generic, Show)
 
 data Modifier
     = Prep
     | Pure
     | Impure
     | UnknownM
-    deriving (Show)
+    deriving (Generic, Show)
