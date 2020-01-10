@@ -33,6 +33,7 @@ class GScope f where
     gScope :: NextUnique -> ScopeStack -> SymTable -> f a -> Result (NextUnique, SymTable)
 
 instance GScope V1 where
+    -- Shouldn't be scoping empty data types
     gScope _ _ _ _ = undefined
 
 -- Leaves
@@ -45,9 +46,9 @@ instance GScope a => GScope (K1 t (a p)) where
 
 -- instance (GScope (K1 R ModuleItem)) where
 --     gScope n ss st = (scope n ss st) . from
-instance Scope ModuleItem
-instance GScope [] where -- This shouldn't be necessary??
-    gScope n _ st [] = Pass (n, st) []
+-- instance Scope ModuleItem
+-- instance GScope [] where -- This shouldn't be necessary??
+--     gScope n _ st [] = Pass (n, st) []
     -- gScope n ss st (x:xs) = case gScope n ss st x of
     --     Pass (n', st') ws -> case gScope n' ss st' xs of
     --         Pass (n'', st'') ws' -> Pass (n'', st'') (ws <> ws')
@@ -60,18 +61,20 @@ instance GScope a => GScope (M1 i c a) where
 
 -- Out-degree 2, union
 instance (GScope a, GScope b) => GScope (a :+: b) where
+    -- Process each branch independently
     gScope n ss st (L1 a) = gScope n ss st a
     gScope n ss st (R1 b) = gScope n ss st b
 
 -- Out-degree 2, intersection
 instance (GScope a, GScope b) => GScope (a :*: b) where
+    -- Process each branch independently
     gScope n ss st (a :*: b) = case gScope n ss st a of
         Pass (n', st') ws -> case gScope n' ss st' b of
             Pass (n'', st'') ws' -> Pass (n'', st'') $ (ws <> ws')
             Fail m               -> Fail m
         Fail m            -> Fail m
 
-instance (Generic a) => GScope (f a)
+-- instance (Generic a) => GScope (f a)
 instance (Generic a, GScope (Rep a)) => Scope a
 -- instance (GScope (K1 R a)) => Scope a
 
